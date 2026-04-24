@@ -29,14 +29,39 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <Image src="/logo.svg" alt="Modulor" width={110} height={30} />
             <div className="flex items-center gap-3 mt-2">
-              <Link href="#" aria-label="Instagram" className="text-muted-foreground hover:text-primary transition-colors">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              {/* Instagram – dégradé officiel */}
+              <Link href="#" aria-label="Instagram" className="hover:opacity-80 transition-opacity">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
+                      <stop offset="0%" stopColor="#ffd600"/>
+                      <stop offset="30%" stopColor="#ff6b00"/>
+                      <stop offset="60%" stopColor="#e1306c"/>
+                      <stop offset="80%" stopColor="#833ab4"/>
+                      <stop offset="100%" stopColor="#405de6"/>
+                    </radialGradient>
+                  </defs>
+                  <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig-grad)"/>
+                  <circle cx="12" cy="12" r="4.5" stroke="white" strokeWidth="1.8" fill="none"/>
+                  <circle cx="17.2" cy="6.8" r="1.1" fill="white"/>
+                </svg>
               </Link>
-              <Link href="#" aria-label="Facebook" className="text-muted-foreground hover:text-primary transition-colors">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+
+              {/* Facebook – bleu officiel */}
+              <Link href="#" aria-label="Facebook" className="hover:opacity-80 transition-opacity">
+                <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="24" height="24" rx="5" fill="#1877F2"/>
+                  <path d="M15.5 8H13.5V6.5C13.5 5.95 13.95 5.5 14.5 5.5H15.5V3H13.5C12.12 3 11 4.12 11 5.5V8H9V10.5H11V21H13.5V10.5H15.5L15.5 8Z" fill="white"/>
+                </svg>
               </Link>
-              <Link href="#" aria-label="YouTube" className="text-muted-foreground hover:text-danger transition-colors">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+
+              {/* YouTube – rouge officiel */}
+              <Link href="#" aria-label="YouTube" className="hover:opacity-80 transition-opacity">
+                <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="24" height="24" rx="5" fill="#FF0000"/>
+                  <path d="M19.6 8.2C19.4 7.5 18.8 6.9 18.1 6.7C16.8 6.4 12 6.4 12 6.4C12 6.4 7.2 6.4 5.9 6.7C5.2 6.9 4.6 7.5 4.4 8.2C4.1 9.5 4.1 12 4.1 12C4.1 12 4.1 14.5 4.4 15.8C4.6 16.5 5.2 17.1 5.9 17.3C7.2 17.6 12 17.6 12 17.6C12 17.6 16.8 17.6 18.1 17.3C18.8 17.1 19.4 16.5 19.6 15.8C19.9 14.5 19.9 12 19.9 12C19.9 12 19.9 9.5 19.6 8.2Z" fill="#FF0000" stroke="white" strokeWidth="0.5"/>
+                  <polygon points="10.2,9.6 10.2,14.4 14.8,12" fill="white"/>
+                </svg>
               </Link>
             </div>
           </div>
