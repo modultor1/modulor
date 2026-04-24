@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Typography */
+  --font-sans: var(--font-comfortaa), "Comfortaa", sans-serif;
+
+  /* Modulor Brand Colors */
+  --color-primary:        #2934f2;
+  --color-primary-dark:   #1a22cc;
+  --color-primary-light:  #eef0fe;
+  --color-accent:         #57f27d;
+  --color-accent-dark:    #3dd163;
+  --color-dark-green:     #03251c;
+
+  /* Neutrals */
+  --color-background:     #ffffff;
+  --color-foreground:     #0f0f0f;
+  --color-muted:          #f7f8ff;
+  --color-muted-foreground: #6b7280;
+  --color-border:         #e5e7eb;
+  --color-card:           #ffffff;
+
+  /* Status */
+  --color-success:        #57f27d;
+  --color-warning:        #f59e0b;
+  --color-danger:         #ef4444;
+
+  /* Spacing / radius */
+  --radius-sm:   0.375rem;
+  --radius-md:   0.75rem;
+  --radius-lg:   1rem;
+  --radius-xl:   1.5rem;
+  --radius-full: 9999px;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f0f0f;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #c7c7c7; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #2934f2; }

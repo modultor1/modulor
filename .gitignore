@@ -1,0 +1,9 @@
+# Ressources design (logos, maquettes, fonts sources) – ne jamais push
+Ressources/
+
+# PDFs internes
+*.pdf
+
+# OS
+.DS_Store
+Thumbs.db
