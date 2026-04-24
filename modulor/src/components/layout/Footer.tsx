@@ -5,7 +5,7 @@ const FOOTER_LINKS = {
   Programmes: [
     "Mentions légales",
     "Conditions générale d'utilisation",
-    "Politique de protection",
+    "Politique de protection des données personnelles",
     "Cookies",
     "Déclaration d'accessibilité",
     "Sécurité",
@@ -22,14 +22,22 @@ const FOOTER_LINKS = {
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-border mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <footer className="relative overflow-hidden mt-auto">
+      {/* Fond vert clair */}
+      <Image src="/images/bg-footer.png" alt="" fill className="object-cover" aria-hidden />
+      {/* Pattern */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Image src="/images/pattern-footer.png" alt="" fill className="object-cover opacity-30" aria-hidden />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
           {/* Brand */}
           <div className="flex flex-col gap-4">
-            <Image src="/logo.svg" alt="Modulor" width={110} height={30} />
+            <Image src="/images/logo-bleu.png" alt="Modulor" width={120} height={32} className="object-contain object-left" />
             <div className="flex items-center gap-3 mt-2">
-              {/* Instagram – dégradé officiel */}
+              {/* Instagram */}
               <Link href="#" aria-label="Instagram" className="hover:opacity-80 transition-opacity">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <defs>
@@ -46,16 +54,14 @@ export function Footer() {
                   <circle cx="17.2" cy="6.8" r="1.1" fill="white"/>
                 </svg>
               </Link>
-
-              {/* Facebook – bleu officiel */}
+              {/* Facebook */}
               <Link href="#" aria-label="Facebook" className="hover:opacity-80 transition-opacity">
                 <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <rect width="24" height="24" rx="5" fill="#1877F2"/>
                   <path d="M15.5 8H13.5V6.5C13.5 5.95 13.95 5.5 14.5 5.5H15.5V3H13.5C12.12 3 11 4.12 11 5.5V8H9V10.5H11V21H13.5V10.5H15.5L15.5 8Z" fill="white"/>
                 </svg>
               </Link>
-
-              {/* YouTube – rouge officiel */}
+              {/* YouTube */}
               <Link href="#" aria-label="YouTube" className="hover:opacity-80 transition-opacity">
                 <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <rect width="24" height="24" rx="5" fill="#FF0000"/>
@@ -73,10 +79,7 @@ export function Footer() {
               <ul className="flex flex-col gap-2">
                 {links.map((link) => (
                   <li key={link}>
-                    <Link
-                      href="#"
-                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                    >
+                    <Link href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                       {link}
                     </Link>
                   </li>
@@ -86,7 +89,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-10 pt-6 border-t border-border text-center">
+        <div className="mt-10 pt-6 border-t border-border/40 text-center">
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Modulor – All Web Service. Tous droits réservés.
           </p>
