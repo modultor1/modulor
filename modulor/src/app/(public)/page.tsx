@@ -1,10 +1,19 @@
+import { HeroSection }        from "@/components/home/HeroSection";
+import { StatsSection }        from "@/components/home/StatsSection";
+import { DomainsSection }      from "@/components/home/DomainsSection";
+import { FormationsSection }   from "@/components/home/FormationsSection";
+import { TestimonialsSection } from "@/components/home/TestimonialsSection";
+import { NewsletterSection }   from "@/components/home/NewsletterSection";
+
 export default function HomePage() {
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-primary mb-4">Modulor</h1>
-        <p className="text-muted-foreground">Phase 1 – Fondations ✓</p>
-      </div>
-    </div>
+    <>
+      <HeroSection />
+      <StatsSection />
+      <DomainsSection />
+      <FormationsSection />
+      <TestimonialsSection />
+      <NewsletterSection />
+    </>
   );
 }
