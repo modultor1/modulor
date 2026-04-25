@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Clock, CheckCircle2, Menu, X } from "lucide-react";
+import { Clock, CheckCircle2, Menu, X, ChevronRight } from "lucide-react";
 
 /* ─── Données mock ──────────────────────────────────────────────────── */
 const FORMATIONS_ACTIVES = [
@@ -141,9 +141,11 @@ function FormationsActives() {
         </div>
       </div>
 
-      {/* Bouton Découvrir — image seule, pas de texte en doublon */}
       <Link href="/formations" className="w-fit">
-        <Image src="/images/db-btn-decouvrir.png" alt="Découvrir" width={140} height={40} className="object-contain hover:opacity-90 transition-opacity cursor-pointer" />
+        <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity cursor-pointer"
+          style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+          Découvrir <ChevronRight size={14} />
+        </span>
       </Link>
     </div>
   );
@@ -187,7 +189,10 @@ function FormationsTerminees() {
       </div>
 
       <Link href="/formations" className="w-fit">
-        <Image src="/images/db-btn-revoir.png" alt="Revoir" width={120} height={40} className="object-contain hover:opacity-90 transition-opacity cursor-pointer" />
+        <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity cursor-pointer"
+          style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+          Revoir <ChevronRight size={14} />
+        </span>
       </Link>
     </div>
   );
@@ -210,7 +215,10 @@ function EmptyFormations() {
         <p className="relative z-10 text-sm font-bold text-dark-green text-center">Aucune formation en cours !</p>
       </div>
       <Link href="/formations" className="w-fit">
-        <Image src="/images/db-btn-decouvrir.png" alt="Découvrir" width={140} height={40} className="object-contain hover:opacity-90 transition-opacity cursor-pointer" />
+        <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity cursor-pointer"
+          style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+          Découvrir <ChevronRight size={14} />
+        </span>
       </Link>
     </div>
   );
