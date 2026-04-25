@@ -167,6 +167,8 @@ function CommunauteCTA() {
         <div className="relative rounded-3xl overflow-hidden flex flex-col items-center text-center gap-5 py-14 px-6">
           {/* Fond dégradé bleu→vert */}
           <Image src="/images/pres-footer-shape.png" alt="" fill className="object-fill" aria-hidden />
+          {/* Pattern par-dessus */}
+          <Image src="/images/pattern-in-shape.png" alt="" fill className="object-fill opacity-25" aria-hidden />
           <div className="relative z-10 flex flex-col items-center gap-5">
             <h2 className="text-2xl md:text-3xl font-bold text-white max-w-lg leading-snug">
               Rejoins la communauté Modulor et donne vie à tes projets grâce à une nouvelle façon d&apos;apprendre.
