@@ -48,7 +48,7 @@ export default function InscriptionPage() {
 
         {/* En-tête */}
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-primary">Connectez-vous</h1>
+          <h1 className="text-2xl font-bold text-primary">Inscrivez-vous</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Tu crées, Modulor s&apos;occupe du reste
           </p>
