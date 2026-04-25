@@ -28,7 +28,7 @@ function FormInput({
 /* ─── Hero ──────────────────────────────────────────────────────────── */
 function ConnexionHero() {
   return (
-    <div className="relative overflow-hidden bg-white" style={{ minHeight: 480 }}>
+    <div className="relative overflow-hidden bg-white" style={{ minHeight: 360 }}>
       {/* Fond mint pleine page */}
       <Image src="/images/connexion-bg.png" alt="" fill className="object-cover" aria-hidden />
 
@@ -37,14 +37,14 @@ function ConnexionHero() {
         <Image src="/images/connexion-pattern.png" alt="" fill className="object-cover opacity-40" aria-hidden />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center pt-10 pb-0">
+      <div className="relative z-10 flex flex-col items-center pt-6 pb-0">
         {/* Titre */}
-        <h1 className="text-3xl md:text-4xl font-bold text-primary text-center mb-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-primary text-center mb-3">
           Rejoignez-nous ici
         </h1>
 
-        {/* Zone homme + bulles — pleine largeur, homme très grand */}
-        <div className="relative w-full flex justify-center items-end" style={{ height: 420 }}>
+        {/* Zone homme + bulles */}
+        <div className="relative w-full flex justify-center items-end" style={{ height: 320 }}>
 
           {/* Fond dégradé derrière l'homme */}
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-full pointer-events-none">
@@ -80,10 +80,10 @@ function ConnexionHero() {
             <Image
               src="/images/connexion-man.png"
               alt="Bienvenue sur Modulor"
-              width={620}
-              height={420}
+              width={500}
+              height={320}
               className="object-contain object-bottom drop-shadow-lg"
-              style={{ height: 420, width: 620 }}
+              style={{ height: 320, width: 500 }}
               priority
             />
           </div>

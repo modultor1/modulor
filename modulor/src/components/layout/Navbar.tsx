@@ -24,11 +24,11 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between">
 
         {/* Logo bleu */}
         <Link href="/" className="flex items-center">
-          <Image src="/images/logo-bleu.png" alt="Modulor" width={120} height={32} className="object-contain" priority />
+          <Image src="/images/logo-bleu.png" alt="Modulor" width={90} height={24} className="object-contain" priority />
         </Link>
 
         {/* Desktop nav */}
