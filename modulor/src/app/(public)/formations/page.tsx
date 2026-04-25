@@ -36,39 +36,86 @@ function Stars({ rating }: { rating: number }) {
 
 /* ─── Hero ──────────────────────────────────────────────────────────── */
 function FormationsHero() {
+  /*
+   * Specs design (canvas 1440px) :
+   *   Femme → X:308.79 (21.4%), Y:22.78px, W:1361.49 (94.5%), H:908.11
+   *   Section height ≈ 420px desktop → clique le bas de l'image (montre haut du corps)
+   *   Mobile : image centrée, width:95%, section height:clamp(260px,55vw,380px)
+   */
   return (
-    <section className="relative overflow-hidden min-h-[320px] sm:min-h-[380px] flex items-center">
+    <section
+      className="relative overflow-hidden w-full"
+      style={{ height: "clamp(260px, 30vw, 420px)" }}
+    >
+      {/* Fond pastel */}
       <Image src="/images/formations-bg-hero.png" alt="" fill className="object-cover" aria-hidden />
+      {/* Pattern */}
       <div className="absolute inset-0 pointer-events-none">
-        <Image src="/images/formations-pattern.png" alt="" fill className="object-cover opacity-60" aria-hidden />
+        <Image src="/images/formations-pattern.png" alt="" fill className="object-cover opacity-55" aria-hidden />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-10 lg:py-0">
+      {/* Texte — gauche, calé dans la zone 0–21% */}
+      <div className="absolute z-20 left-4 sm:left-8 top-1/2 -translate-y-1/2 flex flex-col gap-2 max-w-[20%] min-w-[140px]">
+        <p className="text-foreground font-bold text-sm sm:text-base leading-tight">Nos diverses</p>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary leading-tight">
+          Formations
+        </h1>
+        <p className="text-accent font-bold text-xs sm:text-sm leading-snug">
+          Une riche diversification dans les domaines les plus recherchées
+        </p>
+      </div>
 
-          {/* Texte */}
-          <div className="flex flex-col gap-3 text-center lg:text-left">
-            <p className="text-foreground font-bold text-lg sm:text-xl">Nos diverses</p>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary leading-tight">
-              Formations
-            </h1>
-            <p className="text-accent font-bold text-sm sm:text-base">
-              Une riche diversification dans les domaines les plus recherchées
-            </p>
-          </div>
+      {/* Femme — desktop : specs exactes */}
+      <div
+        className="absolute z-10 hidden sm:block"
+        style={{ left: "21.4%", top: "22.78px", width: "94.5%" }}
+      >
+        <Image
+          src="/images/formations-hero-woman.png"
+          alt="Formations Modulor"
+          width={1361}
+          height={908}
+          style={{ width: "100%", height: "auto" }}
+          className="object-contain object-top drop-shadow-xl"
+          priority
+        />
+      </div>
 
-          {/* Image + bulles */}
-          <div className="relative hidden md:flex justify-center lg:justify-end items-end">
-            <Image src="/images/formations-bubble-blue.png" alt="" width={70} height={70}
-              className="absolute top-4 right-8 z-20 animate-bounce" style={{ animationDuration: "3s" }} />
-            <Image src="/images/formations-bubble-green2.png" alt="" width={56} height={56}
-              className="absolute top-1/3 right-2 z-20 animate-bounce" style={{ animationDuration: "3.5s", animationDelay: "0.5s" }} />
-            <Image src="/images/formations-bubble-green.png" alt="" width={52} height={52}
-              className="absolute bottom-4 left-4 z-20 animate-bounce" style={{ animationDuration: "4s", animationDelay: "1s" }} />
-            <Image src="/images/formations-hero-woman.png" alt="Formations Modulor"
-              width={320} height={380} className="object-contain object-bottom drop-shadow-xl relative z-10" style={{ height: 340 }} priority />
-          </div>
-        </div>
+      {/* Femme — mobile : centrée, pleine largeur */}
+      <div
+        className="absolute z-10 sm:hidden"
+        style={{ right: 0, top: "30px", width: "65%" }}
+      >
+        <Image
+          src="/images/formations-hero-woman.png"
+          alt="Formations Modulor"
+          width={400}
+          height={267}
+          style={{ width: "100%", height: "auto" }}
+          className="object-contain object-top"
+          priority
+        />
+      </div>
+
+      {/* Bulle bleue — haut droite */}
+      <div className="absolute z-30 animate-bounce"
+        style={{ left: "73%", top: "5%", width: "clamp(50px, 5.5vw, 80px)", animationDuration: "3s" }}>
+        <Image src="/images/formations-bubble-blue.png" alt="" width={80} height={80}
+          style={{ width: "100%", height: "auto" }} />
+      </div>
+
+      {/* Bulle verte — droite milieu */}
+      <div className="absolute z-30 hidden sm:block animate-bounce"
+        style={{ left: "68%", top: "45%", width: "clamp(40px, 4.5vw, 65px)", animationDuration: "3.5s", animationDelay: "0.5s" }}>
+        <Image src="/images/formations-bubble-green2.png" alt="" width={65} height={65}
+          style={{ width: "100%", height: "auto" }} />
+      </div>
+
+      {/* Bulle verte — gauche bas */}
+      <div className="absolute z-30 hidden sm:block animate-bounce"
+        style={{ left: "22%", top: "55%", width: "clamp(35px, 4vw, 58px)", animationDuration: "4s", animationDelay: "1s" }}>
+        <Image src="/images/formations-bubble-green.png" alt="" width={58} height={58}
+          style={{ width: "100%", height: "auto" }} />
       </div>
     </section>
   );
