@@ -31,11 +31,11 @@ const RECOMMANDATIONS = [
 ];
 
 const SIDEBAR = [
-  { id: "formations",    label: "Formations",   icon: "/images/db-icon-dashboard.png" },
-  { id: "activites",     label: "Activités",    icon: "/images/db-icon-action.png"    },
-  { id: "portefeuille",  label: "Portefeuille", icon: "/images/db-icon-wallet.png"    },
-  { id: "actions",       label: "Actions",      icon: "/images/db-icon-action.png"    },
-  { id: "acces",         label: "Accès",        icon: "/images/db-icon-docs.png"      },
+  { id: "formations",   label: "Formations",   icon: "/images/db-icon-dashboard.png", href: null            },
+  { id: "activites",    label: "Activités",    icon: "/images/db-icon-action.png",    href: null            },
+  { id: "portefeuille", label: "Portefeuille", icon: "/images/db-icon-wallet.png",    href: "/portefeuille" },
+  { id: "actions",      label: "Actions",      icon: "/images/db-icon-action.png",    href: null            },
+  { id: "acces",        label: "Accès",        icon: "/images/db-icon-docs.png",      href: null            },
 ];
 
 /* ─── Hero ──────────────────────────────────────────────────────────── */
@@ -290,16 +290,20 @@ export default function TableauDeBordPage() {
             <div className="lg:hidden flex flex-wrap gap-2 mb-4">
               {SIDEBAR.map((item) => {
                 const isActive = activeSection === item.id;
-                return (
+                const cls = `flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all ${
+                  isActive ? "text-white" : "bg-white border border-border text-foreground"
+                }`;
+                const style = isActive ? { background: "linear-gradient(to right, #2934f2, #57f27d)" } : {};
+                const inner = <>
+                  <Image src={item.icon} alt={item.label} width={14} height={14}
+                    className={isActive ? "brightness-0 invert" : ""} />
+                  {item.label}
+                </>;
+                return item.href ? (
+                  <Link key={item.id} href={item.href} className={cls} style={style}>{inner}</Link>
+                ) : (
                   <button key={item.id} onClick={() => { setActiveSection(item.id); setSidebarOpen(false); }}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all ${
-                      isActive ? "text-white" : "bg-white border border-border text-foreground"
-                    }`}
-                    style={isActive ? { background: "linear-gradient(to right, #2934f2, #57f27d)" } : {}}>
-                    <Image src={item.icon} alt={item.label} width={14} height={14}
-                      className={isActive ? "brightness-0 invert" : ""} />
-                    {item.label}
-                  </button>
+                    className={cls} style={style}>{inner}</button>
                 );
               })}
             </div>
@@ -312,15 +316,20 @@ export default function TableauDeBordPage() {
               <div className="relative z-10 flex flex-col gap-1 p-3">
                 {SIDEBAR.map((item) => {
                   const isActive = activeSection === item.id;
-                  return (
-                    <button key={item.id} onClick={() => setActiveSection(item.id)}
-                      className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-bold text-left transition-all w-full ${
-                        isActive ? "text-white shadow" : "text-foreground hover:bg-white/60"
-                      }`}
-                      style={isActive ? { background: "linear-gradient(to right, #2934f2, #57f27d)" } : {}}>
-                      <Image src={item.icon} alt={item.label} width={17} height={17}
-                        className={isActive ? "brightness-0 invert" : ""} />
-                      {item.label}
+                  const cls = `flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-bold text-left transition-all w-full ${
+                    isActive ? "text-white shadow" : "text-foreground hover:bg-white/60"
+                  }`;
+                  const style = isActive ? { background: "linear-gradient(to right, #2934f2, #57f27d)" } : {};
+                  const inner = <>
+                    <Image src={item.icon} alt={item.label} width={17} height={17}
+                      className={isActive ? "brightness-0 invert" : ""} />
+                    {item.label}
+                  </>;
+                  return item.href ? (
+                    <Link key={item.id} href={item.href} className={cls} style={style}>{inner}</Link>
+                  ) : (
+                    <button key={item.id} onClick={() => setActiveSection(item.id)} className={cls} style={style}>
+                      {inner}
                     </button>
                   );
                 })}
