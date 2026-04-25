@@ -77,6 +77,13 @@ export function Footer() {
             <div key={title}>
               <h3 className="text-sm font-bold text-primary mb-4">{title}</h3>
               <ul className="flex flex-col gap-2">
+                {title === "À propos" && (
+                  <li>
+                    <Link href="/presentation" className="text-xs font-bold text-primary hover:text-primary/80 transition-colors">
+                      Présentation de Modulor
+                    </Link>
+                  </li>
+                )}
                 {links.map((link) => (
                   <li key={link}>
                     <Link href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
