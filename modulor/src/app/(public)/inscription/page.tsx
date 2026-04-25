@@ -106,10 +106,14 @@ export default function InscriptionPage() {
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          Rejoignez Modulor et commencez votre parcours d&apos;apprentissage.{" "}
-          <Link href="/connexion" className="text-primary font-semibold hover:underline">
+          Déjà un compte ?{" "}
+          <Link href="/connexion" className="text-primary font-bold hover:underline">
             Se connecter
           </Link>
+        </p>
+
+        <p className="text-center text-xs text-muted-foreground">
+          Rejoignez Modulor et commencez votre parcours d&apos;apprentissage.
         </p>
 
       </div>

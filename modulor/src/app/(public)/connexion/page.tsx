@@ -148,6 +148,13 @@ export default function ConnexionPage() {
             </button>
           </form>
 
+          <p className="text-center text-sm text-muted-foreground">
+            Pas encore de compte ?{" "}
+            <Link href="/inscription" className="text-primary font-bold hover:underline">
+              Créer un compte
+            </Link>
+          </p>
+
           <Link href="/inscription" className="text-center text-sm text-primary hover:underline">
             Accédez à votre espace personnel Modulor
           </Link>
