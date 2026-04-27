@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { Clock, CheckCircle2, Menu, X, ChevronRight } from "lucide-react";
 
 /* ─── Données mock ──────────────────────────────────────────────────── */
@@ -39,7 +40,7 @@ const SIDEBAR = [
 ];
 
 /* ─── Hero ──────────────────────────────────────────────────────────── */
-function DashboardHero() {
+function DashboardHero({ userName }: { userName: string }) {
   return (
     <div className="relative overflow-hidden px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
       <Image src="/images/bg-hero.png" alt="" fill className="object-cover" aria-hidden />
@@ -48,7 +49,9 @@ function DashboardHero() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">Bonjour !</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
+          Bonjour, {userName} !
+        </h1>
 
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="flex items-center gap-2">
@@ -264,13 +267,28 @@ function ActivitesContent({ hasData }: { hasData: boolean }) {
 export default function TableauDeBordPage() {
   const [activeTab,     setActiveTab]     = useState("tableau");
   const [activeSection, setActiveSection] = useState("formations");
-  const [hasActive]                       = useState(true);
-  const [hasActivity]                     = useState(true);
   const [sidebarOpen,   setSidebarOpen]   = useState(false);
+  const [userName,      setUserName]      = useState("Utilisateur");
+
+  /*
+   * Pour l'instant les formations sont vides pour les vrais comptes.
+   * Quand les cours seront disponibles on connectera ici les données réelles.
+   */
+  const hasActive   = false;
+  const hasActivity = false;
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      const meta = data.user?.user_metadata;
+      if (meta?.nom) setUserName(meta.nom);
+      else if (data.user?.email) setUserName(data.user.email.split("@")[0]);
+    });
+  }, []);
 
   return (
     <div>
-      <DashboardHero />
+      <DashboardHero userName={userName} />
       <DashboardTabs active={activeTab} onChange={setActiveTab} />
 
       <div className="relative overflow-hidden">

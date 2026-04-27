@@ -79,10 +79,10 @@ export default function InscriptionPage() {
         email,
         role:  profil,
       });
-      setUser(data.user);
-    }
+      }
 
-    router.push("/tableau-de-bord");
+    /* Redirige vers la page de vérification d'email */
+    router.push(`/verifier-email?email=${encodeURIComponent(email)}`);
     router.refresh();
   }
 
