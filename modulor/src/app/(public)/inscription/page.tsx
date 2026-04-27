@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthStore, type UserRole } from "@/store/authStore";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 
 const PROFILS: { id: UserRole; label: string }[] = [
   { id: "etudiant",   label: "Élève / Étudiant" },
@@ -56,11 +57,12 @@ export default function InscriptionPage() {
     setLoading(true);
     const supabase = createClient();
 
-    /* 1. Créer le compte */
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        /* Supabase redirigera vers /auth/callback après confirmation email */
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/tableau-de-bord`,
         data: { nom, role: profil },
       },
     });
@@ -71,7 +73,6 @@ export default function InscriptionPage() {
       return;
     }
 
-    /* 2. Créer le profil dans la table profiles */
     if (data.user) {
       await supabase.from("profiles").upsert({
         id:    data.user.id,
@@ -79,11 +80,9 @@ export default function InscriptionPage() {
         email,
         role:  profil,
       });
-      }
+    }
 
-    /* Redirige vers la page de vérification d'email */
     router.push(`/verifier-email?email=${encodeURIComponent(email)}`);
-    router.refresh();
   }
 
   return (
@@ -104,8 +103,8 @@ export default function InscriptionPage() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <FormInput label="Nom/Prénoms" placeholder="Votre nom complet" value={nom} onChange={setNom} />
           <FormInput label="Email" type="email" placeholder="votre@email.com" value={email} onChange={setEmail} />
-          <FormInput label="Mot de passe" type="password" placeholder="••••••••" value={password} onChange={setPassword} />
-          <FormInput label="Confirmation de mot de passe" type="password" placeholder="••••••••" value={confirm} onChange={setConfirm} />
+          <PasswordInput label="Mot de passe" value={password} onChange={setPassword} />
+          <PasswordInput label="Confirmation de mot de passe" value={confirm} onChange={setConfirm} />
 
           {/* Type de profil */}
           <div className="flex flex-col gap-2 mt-1">

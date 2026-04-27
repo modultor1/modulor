@@ -24,7 +24,8 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr" className={`${comfortaa.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased">{children}</body>
+      {/* suppressHydrationWarning évite le conflit avec les extensions navigateur */}
+      <body className="min-h-full flex flex-col antialiased" suppressHydrationWarning>{children}</body>
     </html>
   );
 }

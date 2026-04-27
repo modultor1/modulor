@@ -6,6 +6,7 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthStore } from "@/store/authStore";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 
 /* ─── Input ─────────────────────────────────────────────────────────── */
 function FormInput({ label, type = "text", placeholder, value, onChange, error }: {
@@ -116,7 +117,7 @@ function ConnexionForm() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <FormInput label="Email" type="email" placeholder="votre@email.com"
               value={email} onChange={setEmail} />
-            <FormInput label="Mot de passe" type="password" placeholder="••••••••"
+            <PasswordInput label="Mot de passe"
               value={password} onChange={setPassword} />
             <div className="text-right -mt-1">
               <Link href="#" className="text-sm text-primary font-semibold hover:underline">
