@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Clock, CheckCircle2, Menu, X, ChevronRight } from "lucide-react";
 
@@ -40,7 +40,12 @@ const SIDEBAR = [
 ];
 
 /* ─── Hero ──────────────────────────────────────────────────────────── */
-function DashboardHero({ userName }: { userName: string }) {
+function DashboardHero({ userName, userEmail, userRole, onNotif, onSettings }: {
+  userName: string; userEmail: string; userRole: string;
+  onNotif: () => void; onSettings: () => void;
+}) {
+  const initials = userName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) || "U";
+
   return (
     <div className="relative overflow-hidden px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
       <Image src="/images/bg-hero.png" alt="" fill className="object-cover" aria-hidden />
@@ -55,24 +60,31 @@ function DashboardHero({ userName }: { userName: string }) {
 
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="flex items-center gap-2">
-            <button className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors">
-              <Image src="/images/db-icon-notif.png"    alt="Notifications" width={20} height={20} />
+            <button onClick={onNotif} aria-label="Notifications"
+              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors">
+              <Image src="/images/db-icon-notif.png" alt="" width={20} height={20} />
             </button>
-            <button className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors">
-              <Image src="/images/db-icon-settings.png" alt="Paramètres"    width={20} height={20} />
+            <button onClick={onSettings} aria-label="Paramètres"
+              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors">
+              <Image src="/images/db-icon-settings.png" alt="" width={20} height={20} />
             </button>
-            <button className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors">
-              <Image src="/images/db-icon-clock.png"    alt="Horloge"       width={20} height={20} />
-            </button>
+            <Link href="/profil" aria-label="Horloge / Profil"
+              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors">
+              <Image src="/images/db-icon-clock.png" alt="" width={20} height={20} />
+            </Link>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3 pl-3 border-l border-border">
-            <Image src="/images/db-avatar.png" alt="Franck KAKPO"
-              width={36} height={36} className="rounded-full object-cover w-9 h-9 sm:w-10 sm:h-10" />
-            <div className="hidden sm:block">
-              <p className="text-xs sm:text-sm font-bold text-foreground leading-tight">Franck KAKPO</p>
-              <p className="text-xs text-muted-foreground">Étudiant</p>
+
+          {/* Avatar cliquable → profil */}
+          <Link href="/profil" className="flex items-center gap-2 sm:gap-3 pl-3 border-l border-border hover:opacity-80 transition-opacity">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
+              style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+              {initials}
             </div>
-          </div>
+            <div className="hidden sm:block">
+              <p className="text-xs sm:text-sm font-bold text-foreground leading-tight">{userName}</p>
+              <p className="text-xs text-muted-foreground">{userRole}</p>
+            </div>
+          </Link>
         </div>
       </div>
     </div>
@@ -202,6 +214,100 @@ function FormationsTerminees() {
 }
 
 /* ─── État vide ─────────────────────────────────────────────────────── */
+/* ─── Formations terminées — état vide ──────────────────────────────── */
+function EmptyTerminees() {
+  return (
+    <div className="flex flex-col gap-3">
+      <h3 className="text-sm font-bold text-primary">Formations terminées</h3>
+      <div className="relative rounded-2xl overflow-hidden p-6 flex flex-col items-center gap-3">
+        <Image src="/images/db-card-done.png" alt="" fill className="object-cover" aria-hidden />
+        <Image src="/images/db-empty.png" alt="Aucune formation terminée" width={56} height={56} className="relative z-10" />
+        <p className="relative z-10 text-sm font-bold text-dark-green text-center">
+          Aucune formation terminée
+        </p>
+      </div>
+      <h3 className="text-sm font-bold text-primary">Barre de progression</h3>
+      <div className="relative rounded-2xl overflow-hidden p-6 flex flex-col items-center gap-3">
+        <Image src="/images/db-card-progress.png" alt="" fill className="object-cover" aria-hidden />
+        <p className="relative z-10 text-xs text-muted-foreground">Complétez vos formations pour voir votre progression</p>
+      </div>
+      <Link href="/formations" className="w-fit">
+        <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity cursor-pointer"
+          style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+          Explorer les formations <ChevronRight size={14} />
+        </span>
+      </Link>
+    </div>
+  );
+}
+
+/* ─── Onglet Détails ────────────────────────────────────────────────── */
+function DetailsTab({ userName, userEmail, userRole }: { userName: string; userEmail: string; userRole: string }) {
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Carte infos utilisateur */}
+      <div className="relative rounded-2xl overflow-hidden p-5">
+        <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
+        <div className="relative z-10 flex flex-col gap-3">
+          <h3 className="text-sm font-bold text-primary">Informations du compte</h3>
+          {[
+            { label: "Nom", value: userName },
+            { label: "Email", value: userEmail },
+            { label: "Rôle", value: userRole },
+            { label: "Statut", value: "Compte actif" },
+          ].map((item) => (
+            <div key={item.label} className="flex items-center justify-between border-b border-border/30 pb-2 last:border-0">
+              <span className="text-xs text-muted-foreground">{item.label}</span>
+              <span className="text-xs font-bold text-foreground">{item.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Statistiques */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {[
+          { label: "Formations achetées", value: "0" },
+          { label: "Formations terminées", value: "0" },
+          { label: "Certificats obtenus", value: "0" },
+        ].map((stat) => (
+          <div key={stat.label} className="relative rounded-2xl overflow-hidden p-4 text-center">
+            <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
+            <p className="relative z-10 text-2xl font-bold text-primary">{stat.value}</p>
+            <p className="relative z-10 text-xs text-muted-foreground mt-1">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Actions rapides */}
+      <div className="relative rounded-2xl overflow-hidden p-5">
+        <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
+        <div className="relative z-10 flex flex-col gap-3">
+          <h3 className="text-sm font-bold text-primary">Actions rapides</h3>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/formations">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-white cursor-pointer hover:opacity-90"
+                style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+                Découvrir les formations
+              </span>
+            </Link>
+            <Link href="/profil">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border-2 border-primary text-primary cursor-pointer hover:bg-primary/5">
+                Modifier mon profil
+              </span>
+            </Link>
+            <Link href="/portefeuille">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border-2 border-accent text-dark-green cursor-pointer hover:bg-accent/10">
+                Mon portefeuille
+              </span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function EmptyFormations() {
   return (
     <div className="flex flex-col gap-3">
@@ -268,27 +374,40 @@ export default function TableauDeBordPage() {
   const [activeTab,     setActiveTab]     = useState("tableau");
   const [activeSection, setActiveSection] = useState("formations");
   const [sidebarOpen,   setSidebarOpen]   = useState(false);
+  const [showNotif,     setShowNotif]     = useState(false);
   const [userName,      setUserName]      = useState("Utilisateur");
+  const [userEmail,     setUserEmail]     = useState("");
+  const [userRole,      setUserRole]      = useState("Étudiant");
 
-  /*
-   * Pour l'instant les formations sont vides pour les vrais comptes.
-   * Quand les cours seront disponibles on connectera ici les données réelles.
-   */
-  const hasActive   = false;
-  const hasActivity = false;
+  const hasActive   = false; // sera true quand l'user aura acheté des formations
+  const hasActivity = false; // sera true quand il y aura de vraies activités
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      const meta = data.user?.user_metadata;
-      if (meta?.nom) setUserName(meta.nom);
-      else if (data.user?.email) setUserName(data.user.email.split("@")[0]);
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return;
+      const meta = data.user.user_metadata;
+      setUserEmail(data.user.email ?? "");
+
+      const { data: profile } = await supabase
+        .from("profiles").select("nom, role").eq("id", data.user.id).single();
+
+      const nom = profile?.nom ?? meta?.nom ?? data.user.email?.split("@")[0] ?? "Utilisateur";
+      setUserName(nom);
+
+      const roleMap: Record<string, string> = {
+        etudiant: "Étudiant", formateur: "Formateur",
+        cadre: "Cadre éducatif", autre: "Autre", admin: "Admin",
+      };
+      setUserRole(roleMap[profile?.role ?? meta?.role ?? "etudiant"] ?? "Étudiant");
     });
   }, []);
 
   return (
     <div>
-      <DashboardHero userName={userName} />
+      <DashboardHero userName={userName} userEmail={userEmail} userRole={userRole}
+        onNotif={() => setShowNotif(!showNotif)}
+        onSettings={() => { window.location.href = "/profil"; }} />
       <DashboardTabs active={activeTab} onChange={setActiveTab} />
 
       <div className="relative overflow-hidden">
@@ -356,11 +475,15 @@ export default function TableauDeBordPage() {
 
             {/* Contenu */}
             <main className="flex-1 min-w-0">
-              {activeSection === "formations" && (
+              {activeSection === "formations" && activeTab === "tableau" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {hasActive ? <FormationsActives /> : <EmptyFormations />}
-                  <FormationsTerminees />
+                  {/* Formations terminées — vide pour nouveau compte */}
+                  <EmptyTerminees />
                 </div>
+              )}
+              {activeSection === "formations" && activeTab === "details" && (
+                <DetailsTab userName={userName} userEmail={userEmail} userRole={userRole} />
               )}
               {activeSection === "activites" && <ActivitesContent hasData={hasActivity} />}
               {(activeSection === "portefeuille" || activeSection === "actions" || activeSection === "acces") && (
