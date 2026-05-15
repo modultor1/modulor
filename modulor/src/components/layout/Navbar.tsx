@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ShoppingCart, Menu, X, LogOut, User, ChevronDown } from "lucide-react";
+import { ShoppingCart, Menu, X, LogOut, User, ChevronDown, LayoutDashboard, Search } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
@@ -33,12 +33,17 @@ function UserAvatar({ name, size = 32 }: { name: string; size?: number }) {
 export function Navbar() {
   const pathname = usePathname();
   const router   = useRouter();
-  const [open,        setOpen]        = useState(false);
-  const [dropOpen,    setDropOpen]    = useState(false);
-  const [authUser,    setAuthUser]    = useState<SupabaseUser | null>(null);
-  const [userName,    setUserName]    = useState("");
-  const [loadingAuth, setLoadingAuth] = useState(true);
+  const [open,          setOpen]          = useState(false);
+  const [dropOpen,      setDropOpen]      = useState(false);
+  const [authUser,      setAuthUser]      = useState<SupabaseUser | null>(null);
+  const [userName,      setUserName]      = useState("");
+  const [loadingAuth,   setLoadingAuth]   = useState(true);
+  const [searchQuery,   setSearchQuery]   = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [showSearch,    setShowSearch]    = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   const count    = useCartStore((s) => s.count());
   const { logout } = useAuthStore();
@@ -74,10 +79,34 @@ export function Navbar() {
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (dropRef.current && !dropRef.current.contains(e.target as Node)) setDropOpen(false);
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) setShowSearch(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
+  /* Debounced search */
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setSearchLoading(true);
+      try {
+        const res = await fetch(`/api/formations/search?q=${encodeURIComponent(searchQuery)}`);
+        const data = await res.json();
+        setSearchResults(data.formations?.slice(0, 5) || []);
+      } catch (error) {
+        console.error("Search error:", error);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   async function handleLogout() {
     const supabase = createClient();
@@ -108,6 +137,68 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
+
+        {/* Recherche */}
+        <div ref={searchRef} className="hidden lg:flex items-center relative">
+          {showSearch ? (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-muted">
+              <Search size={16} className="text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Chercher une formation..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setShowSearch(false);
+                  if (e.key === "Enter" && searchResults.length > 0) {
+                    router.push(`/formations/${searchResults[0].id}`);
+                    setShowSearch(false);
+                  }
+                }}
+                autoFocus
+                className="bg-transparent text-sm outline-none w-40 text-foreground placeholder:text-muted-foreground"
+              />
+              <button onClick={() => { setShowSearch(false); setSearchQuery(""); }} className="hover:text-foreground text-muted-foreground">
+                <X size={14} />
+              </button>
+
+              {searchQuery && (
+                <div className="absolute top-full left-0 mt-2 w-full min-w-80 rounded-2xl bg-white border border-border shadow-xl z-50 max-h-80 overflow-y-auto">
+                  {searchLoading ? (
+                    <div className="px-4 py-8 text-center text-sm text-muted-foreground">Recherche...</div>
+                  ) : searchResults.length === 0 ? (
+                    <div className="px-4 py-8 text-center text-sm text-muted-foreground">Aucun résultat</div>
+                  ) : (
+                    searchResults.map((f) => (
+                      <button
+                        key={f.id}
+                        onClick={() => {
+                          router.push(`/formations/${f.id}`);
+                          setShowSearch(false);
+                          setSearchQuery("");
+                        }}
+                        className="flex items-center gap-3 w-full px-4 py-3 hover:bg-muted border-b border-border/30 transition-colors text-left last:border-0"
+                      >
+                        <div className="relative h-12 w-12 rounded-lg overflow-hidden shrink-0 bg-muted">
+                          <Image src={f.image || "/images/default-course.png"} alt={f.titre} fill className="object-cover" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-foreground truncate">{f.titre}</p>
+                          <p className="text-xs text-muted-foreground truncate">{f.domaine}</p>
+                        </div>
+                        <p className="text-xs font-bold text-primary whitespace-nowrap">{f.prix.toLocaleString()} FCFA</p>
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            <button onClick={() => setShowSearch(true)} className="p-1.5 hover:text-primary transition-colors">
+              <Search size={18} className="text-foreground" />
+            </button>
+          )}
+        </div>
 
         {/* Actions droite */}
         <div className="hidden lg:flex items-center gap-3">
@@ -146,7 +237,7 @@ export function Navbar() {
                     </Link>
                     <Link href="/tableau-de-bord" onClick={() => setDropOpen(false)}
                       className="flex items-center gap-2 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors">
-                      <Image src="/images/db-icon-dashboard.png" alt="" width={15} height={15} />
+                      <LayoutDashboard size={15} className="text-primary" />
                       Tableau de bord
                     </Link>
                     <div className="border-t border-border mt-1 pt-1">

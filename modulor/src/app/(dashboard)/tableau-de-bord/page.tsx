@@ -4,45 +4,57 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Clock, CheckCircle2, Menu, X, ChevronRight } from "lucide-react";
+import {
+  Bell, Settings, Clock, CheckCircle2, Menu, X, ChevronRight,
+  BookOpen, Activity, Wallet, Zap, Lock, LayoutDashboard, FileText,
+  Loader2, AlertCircle,
+  type LucideIcon,
+} from "lucide-react";
 
-/* ─── Données mock ──────────────────────────────────────────────────── */
-const FORMATIONS_ACTIVES = [
-  { id: "1", titre: "Développement web",                     progression: 70, bar: "/images/db-bar-blue.png",  circle: "/images/db-progress-70.png",  couleur: "#2934f2" },
-  { id: "2", titre: "Design graphique et brand design",      progression: 30, bar: "/images/db-bar-green.png", circle: "/images/db-progress-30.png", couleur: "#57f27d" },
-  { id: "3", titre: "Commerce en ligne et produits digitaux",progression: 40, bar: "/images/db-bar-red.png",   circle: "/images/db-progress-40.png",  couleur: "#ef4444" },
-];
-const FORMATIONS_TERMINEES = [
-  { id: "4", titre: "Développement web" },
-  { id: "5", titre: "Design graphique et brand design" },
-  { id: "6", titre: "Commerce en ligne et produits digitaux" },
-];
-const ACTIVITES = [
-  { texte: "Vous avez souscrit à la formation de Design graphique",    date: "10/01/2026 à 13h 05mn" },
-  { texte: "Vous avez souscrit à la formation de E-Commerce",          date: "14/01/2026 à 11h 05mn" },
-  { texte: "Vous avez souscrit à la formation de Développement...",    date: "17/01/2026 à 11h 06mn" },
-];
-const NOTIFICATIONS = [
-  { texte: "Souscription de la formation Design graphique avec succès", date: "10/01/2026 à 11h 06mn" },
-  { texte: "Souscription de la formation E-Commerce avec succès",       date: "14/01/2026 à 11h 06mn" },
-];
-const RECOMMANDATIONS = [
-  { texte: "Alain SODJINOU s'est inscrit sur notre plateforme...", date: "10/01/2026 à 13h 06mn" },
-  { texte: "Alain SODJINOU s'est inscrit sur notre plateforme...", date: "14/01/2026 à 11h 06mn" },
+/* ─── Types ──────────────────────────────────────────────────────────── */
+interface Enrollment {
+  formation_id: string;
+  titre:        string;
+  domaine:      string;
+  image:        string;
+  prix:         number;
+  statut:       string;
+  pourcentage:  number;
+  terminee:     boolean;
+  enrolled_at:  string;
+}
+
+interface Notification {
+  id:         string;
+  titre:      string;
+  message:    string;
+  type:       string;
+  lu:         boolean;
+  created_at: string;
+}
+
+/* ─── Sidebar ────────────────────────────────────────────────────────── */
+const SIDEBAR: { id: string; label: string; Icon: LucideIcon; href: string | null }[] = [
+  { id: "formations",   label: "Formations",   Icon: BookOpen, href: null            },
+  { id: "activites",    label: "Activités",    Icon: Activity, href: null            },
+  { id: "portefeuille", label: "Portefeuille", Icon: Wallet,   href: "/portefeuille" },
+  { id: "actions",      label: "Actions",      Icon: Zap,      href: null            },
+  { id: "acces",        label: "Accès",        Icon: Lock,     href: null            },
 ];
 
-const SIDEBAR = [
-  { id: "formations",   label: "Formations",   icon: "/images/db-icon-dashboard.png", href: null            },
-  { id: "activites",    label: "Activités",    icon: "/images/db-icon-action.png",    href: null            },
-  { id: "portefeuille", label: "Portefeuille", icon: "/images/db-icon-wallet.png",    href: "/portefeuille" },
-  { id: "actions",      label: "Actions",      icon: "/images/db-icon-action.png",    href: null            },
-  { id: "acces",        label: "Accès",        icon: "/images/db-icon-docs.png",      href: null            },
-];
+/* ─── Barre de progression Tailwind ─────────────────────────────────── */
+function ProgressBar({ pct, color }: { pct: number; color: string }) {
+  return (
+    <div className="w-full h-2.5 rounded-full bg-border overflow-hidden">
+      <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
+    </div>
+  );
+}
 
 /* ─── Hero ──────────────────────────────────────────────────────────── */
-function DashboardHero({ userName, userEmail, userRole, onNotif, onSettings }: {
+function DashboardHero({ userName, userEmail, userRole, unreadCount, onNotif, onSettings }: {
   userName: string; userEmail: string; userRole: string;
-  onNotif: () => void; onSettings: () => void;
+  unreadCount: number; onNotif: () => void; onSettings: () => void;
 }) {
   const initials = userName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) || "U";
 
@@ -61,20 +73,24 @@ function DashboardHero({ userName, userEmail, userRole, onNotif, onSettings }: {
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="flex items-center gap-2">
             <button onClick={onNotif} aria-label="Notifications"
-              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors">
-              <Image src="/images/db-icon-notif.png" alt="" width={20} height={20} />
+              className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors group">
+              <Bell size={18} className="text-primary group-hover:scale-110 transition-transform" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
             </button>
             <button onClick={onSettings} aria-label="Paramètres"
-              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors">
-              <Image src="/images/db-icon-settings.png" alt="" width={20} height={20} />
+              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors group">
+              <Settings size={18} className="text-accent group-hover:rotate-45 transition-transform duration-300" />
             </button>
-            <Link href="/profil" aria-label="Horloge / Profil"
-              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors">
-              <Image src="/images/db-icon-clock.png" alt="" width={20} height={20} />
+            <Link href="/profil" aria-label="Mon profil"
+              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors group">
+              <Clock size={18} className="text-primary group-hover:scale-110 transition-transform" />
             </Link>
           </div>
 
-          {/* Avatar cliquable → profil */}
           <Link href="/profil" className="flex items-center gap-2 sm:gap-3 pl-3 border-l border-border hover:opacity-80 transition-opacity">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
               style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
@@ -91,6 +107,58 @@ function DashboardHero({ userName, userEmail, userRole, onNotif, onSettings }: {
   );
 }
 
+/* ─── Panel Notifications ────────────────────────────────────────────── */
+function NotifPanel({ notifs, onClose, onMarkRead }: {
+  notifs: Notification[];
+  onClose: () => void;
+  onMarkRead: () => void;
+}) {
+  const typeColor: Record<string, string> = {
+    success: "#57f27d", info: "#2934f2", warning: "#f59e0b", error: "#ef4444",
+  };
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end">
+      <div className="absolute inset-0 bg-black/20" onClick={onClose} />
+      <div className="relative z-10 w-full max-w-sm bg-white border-l border-border shadow-2xl flex flex-col">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+          <span className="font-bold text-foreground text-sm">Notifications</span>
+          <div className="flex items-center gap-3">
+            <button onClick={onMarkRead} className="text-xs text-primary hover:underline">
+              Tout lire
+            </button>
+            <button onClick={onClose}>
+              <X size={18} className="text-muted-foreground" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {notifs.length === 0 ? (
+            <div className="flex flex-col items-center gap-3 py-12 px-4 text-center">
+              <Bell size={32} className="text-border" />
+              <p className="text-sm text-muted-foreground">Aucune notification</p>
+            </div>
+          ) : notifs.map((n) => (
+            <div key={n.id}
+              className={`px-4 py-3 border-b border-border/50 flex gap-3 ${n.lu ? "opacity-60" : "bg-muted/30"}`}>
+              <div className="w-2 h-2 rounded-full mt-1.5 shrink-0"
+                style={{ background: typeColor[n.type] ?? "#6b7280" }} />
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <p className="text-xs font-bold text-foreground">{n.titre}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{n.message}</p>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  {new Date(n.created_at).toLocaleDateString("fr-FR", {
+                    day: "numeric", month: "long", hour: "2-digit", minute: "2-digit",
+                  })}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Tabs ──────────────────────────────────────────────────────────── */
 function DashboardTabs({ active, onChange }: { active: string; onChange: (t: string) => void }) {
   return (
@@ -98,14 +166,14 @@ function DashboardTabs({ active, onChange }: { active: string; onChange: (t: str
       <Image src="/images/db-bg-tabs.png" alt="" fill className="object-cover" aria-hidden />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-6 sm:gap-8 overflow-x-auto">
         {[
-          { id: "tableau", label: "Tableau",  icon: "/images/db-icon-dashboard.png" },
-          { id: "details", label: "Détails",  icon: "/images/db-icon-docs.png"      },
+          { id: "tableau", label: "Tableau",  Icon: LayoutDashboard },
+          { id: "details", label: "Détails",  Icon: FileText        },
         ].map((tab) => (
           <button key={tab.id} onClick={() => onChange(tab.id)}
             className={`flex items-center gap-2 py-3 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${
               active === tab.id ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
             }`}>
-            <Image src={tab.icon} alt="" width={15} height={15} />
+            <tab.Icon size={15} />
             {tab.label}
           </button>
         ))}
@@ -115,44 +183,40 @@ function DashboardTabs({ active, onChange }: { active: string; onChange: (t: str
 }
 
 /* ─── Formations actives ────────────────────────────────────────────── */
-function FormationsActives() {
+const COLORS = ["#2934f2", "#57f27d", "#ef4444", "#f59e0b", "#8b5cf6"];
+
+function FormationsActives({ enrollments }: { enrollments: Enrollment[] }) {
+  const actives = enrollments.filter((e) => !e.terminee);
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-sm font-bold text-primary">Formations actives</h3>
 
-      {/* Liste des cours */}
       <div className="relative rounded-2xl overflow-hidden p-4">
         <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
         <ul className="relative z-10 flex flex-col gap-2">
-          {FORMATIONS_ACTIVES.map((f) => (
-            <li key={f.id} className="flex items-center gap-2 text-sm text-foreground">
-              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: f.couleur }} />
-              <span className="truncate">{f.titre}</span>
+          {actives.map((e, i) => (
+            <li key={e.formation_id} className="flex items-center gap-2 text-sm text-foreground">
+              <span className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ background: COLORS[i % COLORS.length] }} />
+              <span className="truncate">{e.titre}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Barre de progression */}
       <h3 className="text-sm font-bold text-primary">Barre de progression</h3>
       <div className="relative rounded-2xl overflow-hidden p-4">
         <Image src="/images/db-card-progress.png" alt="" fill className="object-cover" aria-hidden />
-        <div className="relative z-10 flex items-center gap-3">
-          {/* Barres + labels */}
-          <div className="flex-1 flex flex-col gap-3 min-w-0">
-            {FORMATIONS_ACTIVES.map((f) => (
-              <div key={f.id} className="flex flex-col gap-1">
-                <span className="text-xs text-foreground truncate">{f.titre}</span>
-                <div className="relative h-3 rounded-full overflow-hidden">
-                  <Image src={f.bar} alt="" fill className="object-fill" aria-hidden />
-                </div>
+        <div className="relative z-10 flex flex-col gap-3">
+          {actives.map((e, i) => (
+            <div key={e.formation_id} className="flex flex-col gap-1">
+              <span className="text-xs text-foreground truncate">{e.titre}</span>
+              <div className="flex items-center gap-2">
+                <ProgressBar pct={e.pourcentage} color={COLORS[i % COLORS.length]} />
+                <span className="text-xs font-bold text-muted-foreground shrink-0">{e.pourcentage}%</span>
               </div>
-            ))}
-          </div>
-          {/* Cercle 80% */}
-          <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 relative">
-            <Image src="/images/db-progress-80.png" alt="80%" fill className="object-contain" />
-          </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -167,7 +231,8 @@ function FormationsActives() {
 }
 
 /* ─── Formations terminées ──────────────────────────────────────────── */
-function FormationsTerminees() {
+function FormationsTerminees({ enrollments }: { enrollments: Enrollment[] }) {
+  const done = enrollments.filter((e) => e.terminee);
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-sm font-bold text-primary">Formations terminées</h3>
@@ -175,10 +240,10 @@ function FormationsTerminees() {
       <div className="relative rounded-2xl overflow-hidden p-4">
         <Image src="/images/db-card-done.png" alt="" fill className="object-cover" aria-hidden />
         <ul className="relative z-10 flex flex-col gap-2">
-          {FORMATIONS_TERMINEES.map((f) => (
-            <li key={f.id} className="flex items-center gap-2 text-sm text-foreground">
-              <span className="w-2 h-2 rounded-full flex-shrink-0 bg-red-400" />
-              <span className="truncate">{f.titre}</span>
+          {done.map((e) => (
+            <li key={e.formation_id} className="flex items-center gap-2 text-sm text-foreground">
+              <CheckCircle2 size={13} className="text-accent flex-shrink-0" />
+              <span className="truncate">{e.titre}</span>
             </li>
           ))}
         </ul>
@@ -187,19 +252,16 @@ function FormationsTerminees() {
       <h3 className="text-sm font-bold text-primary">Barre de progression</h3>
       <div className="relative rounded-2xl overflow-hidden p-4">
         <Image src="/images/db-card-progress.png" alt="" fill className="object-cover" aria-hidden />
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="flex-1 flex flex-col gap-3">
-            {FORMATIONS_TERMINEES.map((f) => (
-              <div key={f.id} className="flex items-center gap-2">
-                <CheckCircle2 size={13} className="text-accent flex-shrink-0" />
-                <span className="text-xs text-muted-foreground">terminé</span>
-                <div className="flex-1 h-2.5 rounded-full bg-accent/40" />
+        <div className="relative z-10 flex flex-col gap-3">
+          {done.map((e) => (
+            <div key={e.formation_id} className="flex flex-col gap-1">
+              <span className="text-xs text-foreground truncate">{e.titre}</span>
+              <div className="flex items-center gap-2">
+                <ProgressBar pct={100} color="#57f27d" />
+                <span className="text-xs font-bold text-accent shrink-0">100%</span>
               </div>
-            ))}
-          </div>
-          <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 relative">
-            <Image src="/images/db-progress-80.png" alt="100%" fill className="object-contain" />
-          </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -213,18 +275,40 @@ function FormationsTerminees() {
   );
 }
 
-/* ─── État vide ─────────────────────────────────────────────────────── */
-/* ─── Formations terminées — état vide ──────────────────────────────── */
+/* ─── États vides ───────────────────────────────────────────────────── */
+function EmptyFormations() {
+  return (
+    <div className="flex flex-col gap-3">
+      <h3 className="text-sm font-bold text-primary">Formations actives</h3>
+      <div className="relative rounded-2xl overflow-hidden p-6 flex flex-col items-center gap-3">
+        <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
+        <Image src="/images/db-empty.png" alt="" width={64} height={64} className="relative z-10" />
+        <p className="relative z-10 text-sm font-bold text-dark-green text-center">Aucune formation en cours !</p>
+      </div>
+      <h3 className="text-sm font-bold text-primary">Barre de progression</h3>
+      <div className="relative rounded-2xl overflow-hidden p-6 flex flex-col items-center gap-3">
+        <Image src="/images/db-card-progress.png" alt="" fill className="object-cover" aria-hidden />
+        <Image src="/images/db-empty.png" alt="" width={64} height={64} className="relative z-10" />
+        <p className="relative z-10 text-sm font-bold text-dark-green text-center">Aucune formation en cours !</p>
+      </div>
+      <Link href="/formations" className="w-fit">
+        <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity cursor-pointer"
+          style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+          Découvrir <ChevronRight size={14} />
+        </span>
+      </Link>
+    </div>
+  );
+}
+
 function EmptyTerminees() {
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-sm font-bold text-primary">Formations terminées</h3>
       <div className="relative rounded-2xl overflow-hidden p-6 flex flex-col items-center gap-3">
         <Image src="/images/db-card-done.png" alt="" fill className="object-cover" aria-hidden />
-        <Image src="/images/db-empty.png" alt="Aucune formation terminée" width={56} height={56} className="relative z-10" />
-        <p className="relative z-10 text-sm font-bold text-dark-green text-center">
-          Aucune formation terminée
-        </p>
+        <Image src="/images/db-empty.png" alt="" width={56} height={56} className="relative z-10" />
+        <p className="relative z-10 text-sm font-bold text-dark-green text-center">Aucune formation terminée</p>
       </div>
       <h3 className="text-sm font-bold text-primary">Barre de progression</h3>
       <div className="relative rounded-2xl overflow-hidden p-6 flex flex-col items-center gap-3">
@@ -234,7 +318,7 @@ function EmptyTerminees() {
       <Link href="/formations" className="w-fit">
         <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity cursor-pointer"
           style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
-          Explorer les formations <ChevronRight size={14} />
+          Explorer <ChevronRight size={14} />
         </span>
       </Link>
     </div>
@@ -242,10 +326,14 @@ function EmptyTerminees() {
 }
 
 /* ─── Onglet Détails ────────────────────────────────────────────────── */
-function DetailsTab({ userName, userEmail, userRole }: { userName: string; userEmail: string; userRole: string }) {
+function DetailsTab({ userName, userEmail, userRole, enrollments }: {
+  userName: string; userEmail: string; userRole: string; enrollments: Enrollment[];
+}) {
+  const actives = enrollments.filter((e) => !e.terminee).length;
+  const terminees = enrollments.filter((e) => e.terminee).length;
+
   return (
     <div className="flex flex-col gap-4">
-      {/* Carte infos utilisateur */}
       <div className="relative rounded-2xl overflow-hidden p-5">
         <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
         <div className="relative z-10 flex flex-col gap-3">
@@ -264,12 +352,11 @@ function DetailsTab({ userName, userEmail, userRole }: { userName: string; userE
         </div>
       </div>
 
-      {/* Statistiques */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {[
-          { label: "Formations achetées", value: "0" },
-          { label: "Formations terminées", value: "0" },
-          { label: "Certificats obtenus", value: "0" },
+          { label: "Formations achetées",  value: String(enrollments.length) },
+          { label: "Formations terminées", value: String(terminees) },
+          { label: "En cours",             value: String(actives) },
         ].map((stat) => (
           <div key={stat.label} className="relative rounded-2xl overflow-hidden p-4 text-center">
             <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
@@ -279,7 +366,6 @@ function DetailsTab({ userName, userEmail, userRole }: { userName: string; userE
         ))}
       </div>
 
-      {/* Actions rapides */}
       <div className="relative rounded-2xl overflow-hidden p-5">
         <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
         <div className="relative z-10 flex flex-col gap-3">
@@ -308,46 +394,28 @@ function DetailsTab({ userName, userEmail, userRole }: { userName: string; userE
   );
 }
 
-function EmptyFormations() {
-  return (
-    <div className="flex flex-col gap-3">
-      <h3 className="text-sm font-bold text-primary">Formations actives</h3>
-      <div className="relative rounded-2xl overflow-hidden p-6 flex flex-col items-center gap-3">
-        <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
-        <Image src="/images/db-empty.png" alt="Aucune formation" width={64} height={64} className="relative z-10" />
-        <p className="relative z-10 text-sm font-bold text-dark-green text-center">Aucune formation en cours !</p>
-      </div>
-      <h3 className="text-sm font-bold text-primary">Barre de progression</h3>
-      <div className="relative rounded-2xl overflow-hidden p-6 flex flex-col items-center gap-3">
-        <Image src="/images/db-card-progress.png" alt="" fill className="object-cover" aria-hidden />
-        <Image src="/images/db-empty.png" alt="Aucune formation" width={64} height={64} className="relative z-10" />
-        <p className="relative z-10 text-sm font-bold text-dark-green text-center">Aucune formation en cours !</p>
-      </div>
-      <Link href="/formations" className="w-fit">
-        <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity cursor-pointer"
-          style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
-          Découvrir <ChevronRight size={14} />
-        </span>
-      </Link>
-    </div>
-  );
-}
-
 /* ─── Activités ─────────────────────────────────────────────────────── */
-function ActivitesContent({ hasData }: { hasData: boolean }) {
-  const Section = ({ title, color, items }: { title: string; color: string; items: { texte: string; date: string }[] }) => (
+function ActivitesContent({ enrollments, notifications }: {
+  enrollments: Enrollment[];
+  notifications: Notification[];
+}) {
+  const Section = ({ title, color, items }: {
+    title: string; color: string;
+    items: { texte: string; date: string }[];
+  }) => (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <span className="text-sm font-bold flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />{title}
         </span>
         <span className="text-xs text-muted-foreground flex items-center gap-1">
-          <Clock size={11} /> Date et heures
+          <Clock size={11} /> Date et heure
         </span>
       </div>
       <div className="rounded-2xl border border-border bg-white/80 overflow-hidden">
-        {hasData && items.length > 0 ? items.map((item, i) => (
-          <div key={i} className={`flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-4 px-4 py-3 text-sm ${i < items.length - 1 ? "border-b border-border" : ""}`}>
+        {items.length > 0 ? items.map((item, i) => (
+          <div key={i} className={`flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-4 px-4 py-3 text-sm ${
+            i < items.length - 1 ? "border-b border-border" : ""}`}>
             <span className="text-foreground text-xs sm:text-sm">{item.texte}</span>
             <span className="text-xs text-muted-foreground whitespace-nowrap">{item.date}</span>
           </div>
@@ -360,37 +428,61 @@ function ActivitesContent({ hasData }: { hasData: boolean }) {
       </div>
     </div>
   );
+
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString("fr-FR", {
+      day: "2-digit", month: "2-digit", year: "numeric",
+      hour: "2-digit", minute: "2-digit",
+    });
+
+  const activites = enrollments.map((e) => ({
+    texte: `Vous vous êtes inscrit à la formation "${e.titre}"`,
+    date:  formatDate(e.enrolled_at),
+  }));
+
+  const notifItems = notifications.map((n) => ({
+    texte: n.message,
+    date:  formatDate(n.created_at),
+  }));
+
   return (
     <div className="flex flex-col gap-5">
-      <Section title="Dernières activités"    color="#57f27d" items={hasData ? ACTIVITES       : []} />
-      <Section title="Notifications récentes" color="#f59e0b" items={hasData ? NOTIFICATIONS   : []} />
-      <Section title="Recommandations"        color="#ef4444" items={hasData ? RECOMMANDATIONS : []} />
+      <Section title="Dernières activités"    color="#57f27d" items={activites}  />
+      <Section title="Notifications récentes" color="#f59e0b" items={notifItems} />
     </div>
   );
 }
 
 /* ─── Page principale ───────────────────────────────────────────────── */
 export default function TableauDeBordPage() {
-  const [activeTab,     setActiveTab]     = useState("tableau");
-  const [activeSection, setActiveSection] = useState("formations");
-  const [sidebarOpen,   setSidebarOpen]   = useState(false);
-  const [showNotif,     setShowNotif]     = useState(false);
-  const [userName,      setUserName]      = useState("Utilisateur");
-  const [userEmail,     setUserEmail]     = useState("");
-  const [userRole,      setUserRole]      = useState("Étudiant");
+  const [activeTab,      setActiveTab]      = useState("tableau");
+  const [activeSection,  setActiveSection]  = useState("formations");
+  const [sidebarOpen,    setSidebarOpen]    = useState(false);
+  const [showNotif,      setShowNotif]      = useState(false);
+  const [userName,       setUserName]       = useState("Utilisateur");
+  const [userEmail,      setUserEmail]      = useState("");
+  const [userRole,       setUserRole]       = useState("Étudiant");
+  const [userId,         setUserId]         = useState<string | null>(null);
+  const [enrollments,    setEnrollments]    = useState<Enrollment[]>([]);
+  const [notifications,  setNotifications]  = useState<Notification[]>([]);
+  const [loadingData,    setLoadingData]    = useState(true);
 
-  const hasActive   = false; // sera true quand l'user aura acheté des formations
-  const hasActivity = false; // sera true quand il y aura de vraies activités
+  const unreadCount = notifications.filter((n) => !n.lu).length;
+  const channelRef  = useRef<ReturnType<typeof createClient> extends { channel: (...args: unknown[]) => infer R } ? R : unknown>(null);
 
+  /* ─── Charger l'utilisateur + données ── */
   useEffect(() => {
     const supabase = createClient();
+
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) return;
+      const uid  = data.user.id;
       const meta = data.user.user_metadata;
       setUserEmail(data.user.email ?? "");
+      setUserId(uid);
 
       const { data: profile } = await supabase
-        .from("profiles").select("nom, role").eq("id", data.user.id).single();
+        .from("profiles").select("nom, role").eq("id", uid).single();
 
       const nom = profile?.nom ?? meta?.nom ?? data.user.email?.split("@")[0] ?? "Utilisateur";
       setUserName(nom);
@@ -400,14 +492,77 @@ export default function TableauDeBordPage() {
         cadre: "Cadre éducatif", autre: "Autre", admin: "Admin",
       };
       setUserRole(roleMap[profile?.role ?? meta?.role ?? "etudiant"] ?? "Étudiant");
+
+      /* Enrôlements via la vue user_formations */
+      const { data: envs } = await supabase
+        .from("user_formations")
+        .select("*")
+        .eq("user_id", uid)
+        .order("enrolled_at", { ascending: false });
+      setEnrollments(envs ?? []);
+
+      /* Notifications */
+      const { data: notifs } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", uid)
+        .order("created_at", { ascending: false })
+        .limit(30);
+      setNotifications(notifs ?? []);
+
+      setLoadingData(false);
+
+      /* ── Realtime : nouvelles notifications ── */
+      const ch = supabase
+        .channel(`notif-${uid}`)
+        .on("postgres_changes", {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${uid}`,
+        }, (payload) => {
+          setNotifications((prev) => [payload.new as Notification, ...prev]);
+        })
+        .subscribe();
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (channelRef as any).current = ch;
     });
+
+    return () => {
+      const supabase = createClient();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((channelRef as any).current) supabase.removeChannel((channelRef as any).current);
+    };
   }, []);
+
+  async function markAllRead() {
+    await fetch("/api/notifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    setNotifications((prev) => prev.map((n) => ({ ...n, lu: true })));
+  }
+
+  const hasActive   = enrollments.some((e) => !e.terminee);
+  const hasTerminee = enrollments.some((e) => e.terminee);
 
   return (
     <div>
       <DashboardHero userName={userName} userEmail={userEmail} userRole={userRole}
+        unreadCount={unreadCount}
         onNotif={() => setShowNotif(!showNotif)}
         onSettings={() => { window.location.href = "/profil"; }} />
+
+      {showNotif && (
+        <NotifPanel
+          notifs={notifications}
+          onClose={() => setShowNotif(false)}
+          onMarkRead={() => { markAllRead(); setShowNotif(false); }}
+        />
+      )}
+
       <DashboardTabs active={activeTab} onChange={setActiveTab} />
 
       <div className="relative overflow-hidden">
@@ -428,14 +583,10 @@ export default function TableauDeBordPage() {
               {SIDEBAR.map((item) => {
                 const isActive = activeSection === item.id;
                 const cls = `flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all ${
-                  isActive ? "text-white" : "bg-white border border-border text-foreground"
+                  isActive ? "text-white" : "bg-white border border-border text-foreground hover:border-primary hover:text-primary"
                 }`;
                 const style = isActive ? { background: "linear-gradient(to right, #2934f2, #57f27d)" } : {};
-                const inner = <>
-                  <Image src={item.icon} alt={item.label} width={14} height={14}
-                    className={isActive ? "brightness-0 invert" : ""} />
-                  {item.label}
-                </>;
+                const inner = <><item.Icon size={14} />{item.label}</>;
                 return item.href ? (
                   <Link key={item.id} href={item.href} className={cls} style={style}>{inner}</Link>
                 ) : (
@@ -454,14 +605,10 @@ export default function TableauDeBordPage() {
                 {SIDEBAR.map((item) => {
                   const isActive = activeSection === item.id;
                   const cls = `flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-bold text-left transition-all w-full ${
-                    isActive ? "text-white shadow" : "text-foreground hover:bg-white/60"
+                    isActive ? "text-white shadow" : "text-foreground hover:bg-white/60 hover:text-primary"
                   }`;
                   const style = isActive ? { background: "linear-gradient(to right, #2934f2, #57f27d)" } : {};
-                  const inner = <>
-                    <Image src={item.icon} alt={item.label} width={17} height={17}
-                      className={isActive ? "brightness-0 invert" : ""} />
-                    {item.label}
-                  </>;
+                  const inner = <><item.Icon size={17} />{item.label}</>;
                   return item.href ? (
                     <Link key={item.id} href={item.href} className={cls} style={style}>{inner}</Link>
                   ) : (
@@ -475,21 +622,31 @@ export default function TableauDeBordPage() {
 
             {/* Contenu */}
             <main className="flex-1 min-w-0">
-              {activeSection === "formations" && activeTab === "tableau" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {hasActive ? <FormationsActives /> : <EmptyFormations />}
-                  {/* Formations terminées — vide pour nouveau compte */}
-                  <EmptyTerminees />
+              {loadingData ? (
+                <div className="flex justify-center py-12">
+                  <Loader2 size={28} className="text-primary animate-spin" />
                 </div>
-              )}
-              {activeSection === "formations" && activeTab === "details" && (
-                <DetailsTab userName={userName} userEmail={userEmail} userRole={userRole} />
-              )}
-              {activeSection === "activites" && <ActivitesContent hasData={hasActivity} />}
-              {(activeSection === "portefeuille" || activeSection === "actions" || activeSection === "acces") && (
-                <div className="rounded-2xl border border-border bg-white/80 p-8 text-center text-muted-foreground text-sm">
-                  Section à venir
-                </div>
+              ) : (
+                <>
+                  {activeSection === "formations" && activeTab === "tableau" && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {hasActive ? <FormationsActives enrollments={enrollments} /> : <EmptyFormations />}
+                      {hasTerminee ? <FormationsTerminees enrollments={enrollments} /> : <EmptyTerminees />}
+                    </div>
+                  )}
+                  {activeSection === "formations" && activeTab === "details" && (
+                    <DetailsTab userName={userName} userEmail={userEmail} userRole={userRole} enrollments={enrollments} />
+                  )}
+                  {activeSection === "activites" && (
+                    <ActivitesContent enrollments={enrollments} notifications={notifications} />
+                  )}
+                  {(activeSection === "actions" || activeSection === "acces") && (
+                    <div className="rounded-2xl border border-border bg-white/80 p-8 text-center flex flex-col items-center gap-3">
+                      <AlertCircle size={32} className="text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground font-medium">Section à venir prochainement</p>
+                    </div>
+                  )}
+                </>
               )}
             </main>
           </div>

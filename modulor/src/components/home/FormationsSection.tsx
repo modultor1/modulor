@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { StarRating } from "@/components/ui/StarRating";
 import { formatCFA } from "@/lib/utils";
 
@@ -77,7 +78,7 @@ export function FormationsSection() {
                   <Link href={`/formations/${f.id}`}>
                     <span className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer"
                       style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
-                      <Image src="/images/icone-plus.png" alt="Acheter" width={14} height={14} />
+                      <Plus size={14} className="text-white" />
                     </span>
                   </Link>
                 </div>

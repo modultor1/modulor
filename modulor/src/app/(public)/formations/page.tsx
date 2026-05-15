@@ -2,18 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, ChevronDown, SlidersHorizontal } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, ChevronDown, SlidersHorizontal, Loader2 } from "lucide-react";
 import { formatCFA } from "@/lib/utils";
-
-/* ─── Données ───────────────────────────────────────────────────────── */
-const FORMATIONS = [
-  { id: "1", domaine: "Développement web",  titre: "Apprendre les bases du codage et la création des sites", note: 4.5, prix: 15000, image: "/images/formation-1.png" },
-  { id: "2", domaine: "E-Commerce",          titre: "Apprendre l'achat des produits publicités et ventes",    note: 4.5, prix: 15000, image: "/images/formation-2.png" },
-  { id: "3", domaine: "Développement web",  titre: "Apprendre les bases du codage et la création des sites", note: 4.5, prix: 15000, image: "/images/formation-3.png" },
-  { id: "4", domaine: "Design graphique",    titre: "Maîtriser les bases du design et brand design",          note: 4.5, prix: 15000, image: "/images/formation-1.png" },
-  { id: "5", domaine: "Marketing digital",   titre: "Stratégies marketing et réseaux sociaux",                note: 4.5, prix: 15000, image: "/images/formation-2.png" },
-];
 
 const FILTRES = ["Domaine", "Filière", "Spécialité", "Thème"];
 const PER_PAGE = 3;
@@ -120,7 +111,7 @@ function FiltreBar({ onFilter }: { onFilter: (filtre: string) => void }) {
 }
 
 /* ─── Carte formation (horizontal) ─────────────────────────────────── */
-function FormationCard({ f }: { f: typeof FORMATIONS[0] }) {
+function FormationCard({ f }: { f: any }) {
   return (
     <div className="relative rounded-2xl overflow-hidden flex flex-col sm:flex-row gap-0 shadow-sm hover:shadow-md transition-shadow">
       <Image src="/images/formations-bg-card.png" alt="" fill className="object-cover" aria-hidden />
@@ -184,7 +175,25 @@ function Pagination({ current, total, onChange }: { current: number; total: numb
 /* ─── Page ──────────────────────────────────────────────────────────── */
 export default function FormationsPage() {
   const [page,     setPage]     = useState(1);
-  const [filtered, setFiltered] = useState(FORMATIONS);
+  const [filtered, setFiltered] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadFormations() {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/formations/search");
+        const data = await res.json();
+        setFiltered(data.formations || []);
+      } catch (error) {
+        console.error("Error loading formations:", error);
+        setFiltered([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadFormations();
+  }, []);
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const displayed  = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
@@ -200,7 +209,12 @@ export default function FormationsPage() {
             Nos différentes formations
           </h2>
 
-          {displayed.length === 0 ? (
+          {loading ? (
+            <div className="flex flex-col items-center gap-4 py-20">
+              <Loader2 size={40} className="text-primary animate-spin" />
+              <p className="text-sm text-muted-foreground">Chargement des formations...</p>
+            </div>
+          ) : displayed.length === 0 ? (
             <div className="flex flex-col items-center gap-4 py-20">
               {/* OOPS mascot — grand et centré comme dans la maquette */}
               <Image src="/images/db-empty.png" alt="Aucun résultat" width={180} height={180} className="object-contain" />
