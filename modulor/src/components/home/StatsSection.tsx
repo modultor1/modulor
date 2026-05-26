@@ -1,10 +1,11 @@
 import Image from "next/image";
+import CountUp from "@/components/ui/CountUp";
 
 const STATS = [
-  { value: "200+", label: "Apprenants",  sub: "inscrits sur la plateforme" },
-  { value: "10K+", label: "Profils",     sub: "créés sur la plateforme" },
-  { value: "15+",  label: "Formations",  sub: "disponibles sur la plateforme" },
-  { value: "4,5",  label: "",            sub: "Note moyenne des utilisateurs", isStar: true },
+  { to: 200, label: "Apprenants", suffix: "+" },
+  { to: 10, label: "Achats", suffix: "K+" },
+  { to: 15, label: "Formations", suffix: "+" },
+  { to: 4.5, label: "avis utilisateurs", isStar: true },
 ];
 
 export function StatsSection() {
@@ -19,15 +20,17 @@ export function StatsSection() {
                 {/* Stat */}
                 <div className="flex flex-col items-center text-center gap-1 px-4 py-2 flex-1">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-3xl font-bold text-primary">{stat.value}</span>
                     {stat.isStar && (
-                      <Image src="/images/icone-etoile.png" alt="étoile" width={20} height={20} />
+                      <Image src="/images/icone-etoile.png" alt="étoile" width={20} height={20} style={{ filter: "saturate(1.5) hue-rotate(45deg) brightness(1.1)" }} />
                     )}
+                    <div className="flex items-center gap-0">
+                      <CountUp to={stat.to} className="text-3xl font-bold text-primary" />
+                      {stat.suffix && <span className="text-3xl font-bold text-primary">{stat.suffix}</span>}
+                    </div>
                   </div>
                   {stat.label && (
                     <span className="text-sm font-bold text-foreground">{stat.label}</span>
                   )}
-                  <span className="text-xs text-muted-foreground">{stat.sub}</span>
                 </div>
 
                 {/* Séparateur vert vertical — sauf après le dernier */}
