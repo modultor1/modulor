@@ -513,6 +513,12 @@ export default function TableauDeBordPage() {
       setLoadingData(false);
 
       /* ── Realtime : nouvelles notifications ── */
+      // Clean up old channel if exists
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((channelRef as any).current) {
+        supabase.removeChannel((channelRef as any).current);
+      }
+
       const ch = supabase
         .channel(`notif-${uid}`)
         .on("postgres_changes", {
@@ -532,7 +538,9 @@ export default function TableauDeBordPage() {
     return () => {
       const supabase = createClient();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((channelRef as any).current) supabase.removeChannel((channelRef as any).current);
+      if ((channelRef as any).current) {
+        supabase.removeChannel((channelRef as any).current);
+      }
     };
   }, []);
 

@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { ShoppingCart, ChevronRight, CheckCircle2, Star, Loader2, BookOpen } from "lucide-react";
 import { formatCFA } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
+import { useCartStore } from "@/store/cartStore";
 
 /* ─── Types ──────────────────────────────────────────────────────────── */
 interface Module { titre: string; desc: string; }
@@ -73,6 +74,7 @@ function Stars({ rating, size = 16 }: { rating: number; size?: number }) {
 export default function FormationDetailPage() {
   const { id }   = useParams<{ id: string }>();
   const router   = useRouter();
+  const addItemToCart = useCartStore((s) => s.addItem);
 
   const [formation,   setFormation]   = useState<Formation | null>(null);
   const [videos,      setVideos]      = useState<any[]>([]);
@@ -142,6 +144,7 @@ export default function FormationDetailPage() {
 
   async function addToCart() {
     if (!isLoggedIn) { router.push(`/connexion?redirect=/formations/${id}`); return; }
+    if (!formation) return;
     setCartLoading(true);
     const res = await fetch("/api/cart", {
       method: "POST",
@@ -150,6 +153,7 @@ export default function FormationDetailPage() {
     });
     if (res.ok) {
       setInCart(true);
+      addItemToCart(formation);
       setFeedback("Formation ajoutée au panier !");
     } else {
       const data = await res.json();
@@ -269,7 +273,7 @@ export default function FormationDetailPage() {
           </h2>
           {f.teacher_name ? (
             <div className="flex items-center gap-4 rounded-xl border border-border p-4 bg-muted/30">
-              {f.teacher_photo && (
+              {f.teacher_photo && !f.teacher_photo.includes("placeholder") && (
                 <Image src={f.teacher_photo} alt={f.teacher_name} width={72} height={72}
                   className="rounded-full object-cover w-[72px] h-[72px] border-2 border-accent flex-shrink-0" />
               )}
@@ -302,8 +306,10 @@ export default function FormationDetailPage() {
                 <Image src="/images/icone-citation.png" alt="" width={32} height={24} />
                 <p className="text-sm text-muted-foreground leading-relaxed">{a.texte}</p>
                 <div className="flex items-center gap-3 mt-auto">
-                  <Image src={a.photo} alt={a.nom} width={40} height={40}
-                    className="rounded-full object-cover w-10 h-10" />
+                  {a.photo && !a.photo.includes("placeholder") && (
+                    <Image src={a.photo} alt={a.nom} width={40} height={40}
+                      className="rounded-full object-cover w-10 h-10" />
+                  )}
                   <div>
                     <p className="text-sm font-bold text-foreground">{a.nom}</p>
                     <p className="text-xs text-muted-foreground">{a.role}</p>

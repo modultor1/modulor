@@ -5,7 +5,7 @@
 
 -- Insérer la formation
 INSERT INTO public.formations
-  (id, titre, description, domaine, prix, image, note, duree, actif, created_at)
+  (id, titre, description, domaine, prix, image, note, duree, actif, teacher_name, teacher_photo, created_at)
 VALUES (
   'a1b2c3d4-e5f6-4710-9010-b1c2d3e4f506'::uuid,
   'Contrôle Nourriture et Boisson',
@@ -23,6 +23,8 @@ icholadaniel13@gmail.com',
   4.8,
   '64 min',
   true,
+  'Ichola Daniel',
+  NULL,
   NOW()
 ) ON CONFLICT DO NOTHING;
 
