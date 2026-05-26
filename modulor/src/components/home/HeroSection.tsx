@@ -29,7 +29,7 @@ export function HeroSection() {
               <Link href="/formations">
                 <span className="inline-flex items-center gap-3 px-6 sm:px-8 py-3.5 rounded-full font-bold text-white text-sm sm:text-base cursor-pointer"
                   style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
-                  Accéder maintenant
+                  Acheter maintenant
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </span>
               </Link>
