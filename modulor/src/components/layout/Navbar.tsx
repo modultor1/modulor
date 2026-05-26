@@ -200,65 +200,15 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Actions droite */}
-        <div className="hidden lg:flex items-center gap-3">
-          {/* Panier */}
-          <Link href="/panier" className="relative p-1.5">
-            <ShoppingCart size={18} className="text-foreground" />
-            {count > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center">
-                {count}
-              </span>
-            )}
+        {/* Profil button — right side */}
+        <div className="hidden lg:flex items-center">
+          <Link href="/profil">
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold text-white text-sm cursor-pointer"
+              style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+              <User size={16} />
+              Profil
+            </div>
           </Link>
-
-          {!loadingAuth && (
-            isLoggedIn ? (
-              /* Utilisateur connecté — dropdown */
-              <div className="relative" ref={dropRef}>
-                <button onClick={() => setDropOpen(!dropOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-muted transition-colors">
-                  <UserAvatar name={userName} size={28} />
-                  <span className="text-sm font-bold text-foreground max-w-[120px] truncate hidden xl:block">
-                    {userName}
-                  </span>
-                  <ChevronDown size={14} className={cn("text-muted-foreground transition-transform", dropOpen && "rotate-180")} />
-                </button>
-
-                {dropOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-52 rounded-2xl bg-white border border-border shadow-xl py-2 z-50">
-                    <div className="px-4 py-2 border-b border-border">
-                      <p className="text-xs font-bold text-foreground truncate">{userName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{authUser?.email}</p>
-                    </div>
-                    <Link href="/profil" onClick={() => setDropOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors">
-                      <User size={15} className="text-accent" /> Mon profil
-                    </Link>
-                    <Link href="/tableau-de-bord" onClick={() => setDropOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors">
-                      <LayoutDashboard size={15} className="text-primary" />
-                      Tableau de bord
-                    </Link>
-                    <div className="border-t border-border mt-1 pt-1">
-                      <button onClick={handleLogout}
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 w-full transition-colors">
-                        <LogOut size={15} /> Se déconnecter
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              /* Non connecté */
-              <Link href="/connexion">
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-bold text-white text-sm cursor-pointer"
-                  style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
-                  Se connecter
-                </span>
-              </Link>
-            )
-          )}
         </div>
 
         <button className="lg:hidden p-2" onClick={() => setOpen(!open)} aria-label="Menu">
