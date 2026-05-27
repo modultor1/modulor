@@ -28,7 +28,7 @@ export function DomainsSection() {
             Nos domaines de compétences
           </h2>
           <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-            Découvrez nos filières pensées pour répondre aux besoins des apprenants et des professionnels d'aujourd'hui.
+            Nous vous présentons brièvement les domaines importants dans lesquels nous apportons nos compétences
           </p>
         </div>
 
