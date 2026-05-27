@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { StarRating } from "@/components/ui/StarRating";
 import { formatCFA } from "@/lib/utils";
 
@@ -24,8 +24,8 @@ const FORMATIONS = [
   {
     id: "3",
     image: "/images/formation-3.png",
-    domaine: "Développement web",
-    titre: "Apprendre les bases du codage et la création des sites",
+    domaine: "Design graphique",
+    titre: "Apprendre les bases du graphisme Photoshop et Illustrator",
     note: 4.5,
     prix: 15000,
   },
@@ -78,7 +78,7 @@ export function FormationsSection() {
                   <Link href={`/formations/${f.id}`}>
                     <span className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer"
                       style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
-                      <Plus size={14} className="text-white" />
+                      <ArrowRight size={16} className="text-white" />
                     </span>
                   </Link>
                 </div>
