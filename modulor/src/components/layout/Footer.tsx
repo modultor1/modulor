@@ -72,7 +72,7 @@ export function Footer() {
 
         <div className="mt-8 pt-5 border-t border-border/40 text-center">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Modulor – All Web Service. Tous droits réservés.
+            © 2025 Modulor – All Web Service. Tous droits réservés.
           </p>
         </div>
       </div>
