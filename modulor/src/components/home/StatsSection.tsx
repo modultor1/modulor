@@ -21,7 +21,7 @@ export function StatsSection() {
                 <div className="flex flex-col items-center text-center gap-1 px-4 py-2 flex-1">
                   <div className="flex items-center gap-1.5">
                     {stat.isStar && (
-                      <Image src="/images/icone-etoile.png" alt="étoile" width={20} height={20} style={{ filter: "saturate(1.5) hue-rotate(45deg) brightness(1.1)" }} />
+                      <Image src="/images/icone-etoile.png" alt="étoile" width={20} height={20} style={{ filter: "saturate(2) hue-rotate(-80deg) brightness(1.15)" }} />
                     )}
                     <div className="flex items-center gap-0">
                       <CountUp to={stat.to} className="text-3xl font-bold text-primary" />

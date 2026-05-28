@@ -77,7 +77,7 @@ export function FormationsSection() {
                   <span className="text-base font-bold text-foreground">{formatCFA(f.prix)}</span>
                   <Link href={`/formations/${f.id}`}>
                     <span className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer"
-                      style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+                      style={{ background: "linear-gradient(to right, #21D34C, #57f27d)" }}>
                       <ArrowRight size={16} className="text-white" />
                     </span>
                   </Link>
