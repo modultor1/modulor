@@ -13,7 +13,7 @@ export function StatsSection() {
     <section className="bg-white py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Carte blanche avec ombre */}
-        <div className="relative rounded-2xl bg-white shadow-xl px-6 py-6">
+        <div className="relative rounded-2xl bg-white shadow-xl px-6 py-6 z-30" style={{ marginTop: "-88px" }}>
           <div className="grid grid-cols-2 md:grid-cols-4">
             {STATS.map((stat, i) => (
               <div key={i} className="flex items-stretch">

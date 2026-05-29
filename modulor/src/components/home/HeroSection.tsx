@@ -38,14 +38,14 @@ export function HeroSection() {
 
           {/* Images — masquées sur mobile petit, visibles à partir de md */}
           <div className="relative hidden md:flex justify-center lg:justify-end items-end">
-            <Image src="/images/bubble-blue-light.png" alt="" width={65} height={65}
-              className="absolute top-6 right-10 z-20" />
+            <Image src="/images/bubble-blue-light.png" alt="" width={125} height={125}
+              className="absolute z-20" style={{ top: "10%", left: "60%", transform: "translateX(-60%)" }} />
             <Image src="/images/bubble-blue-dark.png" alt="" width={52} height={52}
-              className="absolute top-1/2 left-2 z-20" />
-            <Image src="/images/bubble-green.png" alt="" width={48} height={48}
-              className="absolute top-1/3 right-2 z-20" />
-            <div className="relative z-10 drop-shadow-xl h-full flex items-end">
-              <Image src="/images/Deux étudiants.png" alt="Étudiants Modulor" width={500} height={520}
+              className="absolute z-20" style={{ bottom: "12%", right: "12%" }} />
+            <Image src="/images/bubble-green.png" alt="" width={68} height={68}
+              className="absolute z-20" style={{ top: "30%", left: "10%" }} />
+            <div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px)" }}>
+              <Image src="/images/Deux étudiants.png" alt="Étudiants Modulor" width={650} height={620}
                 className="object-contain" priority />
             </div>
           </div>
