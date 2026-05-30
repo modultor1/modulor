@@ -57,22 +57,22 @@ function FormationsHero() {
           {/* Femme — droite, ancrée en bas */}
           <div className="relative hidden md:flex justify-center lg:justify-end items-end">
             {/* Bulle bleue — haut droite */}
-            <div className="absolute z-20" style={{ top: "8%", left: "60%", transform: "translateX(-60%)" }}>
-              <Image src="/images/bubble-blue-light.png" alt="" width={125} height={125} className="object-contain" />
+            <div className="absolute z-20" style={{ top: "8%", left: "60%", transform: "translateX(-120%)" }}>
+              <Image src="/images/bubble-blue-light.png" alt="" width={100} height={125} className="object-contain" />
             </div>
 
             {/* Bulle verte petite — centre */}
-            <div className="absolute z-20" style={{ top: "35%", left: "35%" }}>
-              <Image src="/images/bubble-green.png" alt="" width={68} height={68} className="object-contain" />
+            <div className="absolute z-20" style={{ top: "65%", left: "15%" }}>
+              <Image src="/images/bubble-green.png" alt="" width={48} height={48} className="object-contain" />
             </div>
 
             {/* Bulle bleue foncée — bas droite */}
-            <div className="absolute z-20" style={{ bottom: "12%", right: "12%" }}>
+            <div className="absolute z-20" style={{ bottom: "12%", right: "12%", transform: "translateY(40px) translateX(10px)" }}>
               <Image src="/images/bubble-blue-dark.png" alt="" width={52} height={52} className="object-contain" />
             </div>
 
             {/* Femme */}
-            <div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px) scale(1.25)" }}>
+            <div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px) translateX(-65px) scale(1.25)" }}>
               <Image src="/images/formations-hero-woman.png" alt="Formations Modulor" width={1313} height={1275}
                 className="object-contain" priority />
             </div>
