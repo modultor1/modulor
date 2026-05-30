@@ -46,7 +46,7 @@ export function HeroSection() {
         <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-60 [transform:scaleX(-1)]" aria-hidden />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full">
+      <div className="relative z-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center" style={{ minHeight: 480 }}>
 
           {/* Texte — pleine largeur sur mobile */}

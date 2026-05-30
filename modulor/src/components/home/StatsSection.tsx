@@ -16,7 +16,8 @@ const easeOut = [0.22, 1, 0.36, 1];
 export function StatsSection() {
   return (
     <motion.section
-      className="bg-white py-8 px-4 sm:px-6 lg:px-8"
+      className="bg-white py-8 px-4 sm:px-6 lg:px-8 relative"
+      style={{ zIndex: 100 }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 }}
