@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
 import { createClient } from "@/lib/supabase/client";
+import { useScroll } from "@/components/ui/use-scroll";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const NAV_LINKS = [
@@ -33,6 +34,7 @@ function UserAvatar({ name, size = 32 }: { name: string; size?: number }) {
 export function Navbar() {
   const pathname = usePathname();
   const router   = useRouter();
+  const scrolled = useScroll(10);
   const [open,          setOpen]          = useState(false);
   const [dropOpen,      setDropOpen]      = useState(false);
   const [authUser,      setAuthUser]      = useState<SupabaseUser | null>(null);
@@ -47,6 +49,18 @@ export function Navbar() {
 
   const count    = useCartStore((s) => s.count());
   const { logout } = useAuthStore();
+
+  /* Scroll lock when mobile menu open */
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   /* Écoute les changements d'auth Supabase */
   useEffect(() => {
@@ -120,8 +134,20 @@ export function Navbar() {
   const isLoggedIn = !!authUser;
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-4">
+    <header
+      className={cn(
+        "sticky z-50 mx-auto w-full border-b border-transparent md:rounded-md md:border md:transition-all md:ease-out",
+        {
+          "bg-white/95 supports-[backdrop-filter]:bg-white/50 border-border backdrop-blur-lg md:top-4 md:max-w-4xl md:shadow-lg":
+            scrolled && !open,
+          "bg-white/90 md:bg-white/90": !scrolled || open,
+          "top-0 md:max-w-7xl": !scrolled,
+        }
+      )}
+    >
+      <div className={cn("mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-4 transition-all md:ease-out", {
+        "md:px-2": scrolled,
+      })}>
 
         <Link href="/" className="flex items-center shrink-0">
           <Image src="/images/logo-bleu.png" alt="Modulor" width={90} height={24} className="object-contain" priority />

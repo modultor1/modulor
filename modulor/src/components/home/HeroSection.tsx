@@ -54,7 +54,7 @@ export function HeroSection() {
             animate={shouldReduceMotion ? false : "visible"}
             variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.3 } } }}
           >
-            <motion.p className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "44px", color: "#2934F2" }}>
+            <motion.p className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "44px", color: "#03251C" }}>
               Nous vous
             </motion.p>
             <motion.h1 className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-montserrat)", fontWeight: 700, fontSize: "66px", color: "#2934F2" }}>
