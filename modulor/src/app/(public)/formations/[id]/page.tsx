@@ -22,7 +22,10 @@ interface Formation {
   prix: number;
   description: string;
   duree?: string;
+  formatore?: string;
   formateur?: string;
+  teacher_name?: string;
+  teacher_photo?: string;
   /* données JSON stockées dans Supabase (colonne JSONB ou fallback mock) */
   objectifs?: string[];
   programme?: Module[];
