@@ -72,8 +72,8 @@ function FormationsHero() {
             </div>
 
             {/* Femme */}
-            <div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px)" }}>
-              <Image src="/images/formations-hero-woman.png" alt="Formations Modulor" width={650} height={620}
+            <div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px) scale(1.25)" }}>
+              <Image src="/images/formations-hero-woman.png" alt="Formations Modulor" width={1313} height={1275}
                 className="object-contain" priority />
             </div>
           </div>
