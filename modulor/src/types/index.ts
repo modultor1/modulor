@@ -21,11 +21,20 @@ export interface Formation {
   prix: number;
   note: number;
   nbAvis?: number;
+  nb_avis?: number;
   image: string;
+  formatore?: string;
   formateur?: string;
+  teacher_name?: string;
+  teacher_photo?: string;
   duree?: string;
+  nivel?: string;
   niveau?: string;
   createdAt?: string;
+  objectifs?: string[];
+  programme?: Array<{ titre: string; desc: string }>;
+  formateurs?: Array<{ nom: string; photo: string }>;
+  avis?: Array<{ nom: string; role: string; photo: string; texte: string }>;
 }
 
 export interface CartItem {
