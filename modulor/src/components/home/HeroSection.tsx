@@ -56,15 +56,15 @@ export function HeroSection() {
             animate={shouldReduceMotion ? false : "visible"}
             variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.3 } } }}
           >
-            <motion.p className="text-foreground text-lg md:text-2xl" variants={textVariants}>
+            <motion.p className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "44px", color: "#2934F2" }}>
               Nous vous
             </motion.p>
-            <motion.h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary leading-tight" variants={textVariants}>
+            <motion.h1 className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-montserrat)", fontWeight: 700, fontSize: "66px", color: "#2934F2" }}>
               Formons&nbsp;!
             </motion.h1>
-            <motion.p className="text-foreground text-lg md:text-2xl" variants={textVariants}>
+            <motion.p className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "38px", color: "#2934F2" }}>
               Nous donnons vie{" "}
-              <span className="text-accent font-bold">à vos projets</span>
+              <span style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "28px", color: "#21D34C" }}>à vos projets</span>
             </motion.p>
             <motion.div className="mt-3 flex justify-center lg:justify-start" variants={buttonVariants}>
               <Link href="/formations">
