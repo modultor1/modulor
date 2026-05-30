@@ -4,29 +4,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 
-const easeOut = [0.22, 1, 0.36, 1];
-
 export function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
 
   const textVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOut } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
   const buttonVariants = {
     hidden: { opacity: 0, y: 30, scale: 0.95 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: easeOut } },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6 } },
   };
 
   const imageVariants = {
     hidden: { opacity: 0, x: 40 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: easeOut } },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
   };
 
   const bubbleVariants = {
     hidden: { opacity: 0, scale: 0.5 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
   };
 
   const getAnimationProps = (shouldReduce: boolean) => {
