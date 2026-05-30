@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { motion } from "motion/react";
+
+const easeOut = [0.22, 1, 0.36, 1];
 
 export function NewsletterSection() {
   const [email, setEmail] = useState("");
@@ -14,7 +17,13 @@ export function NewsletterSection() {
   }
 
   return (
-    <section className="bg-white py-10 px-4 sm:px-6 lg:px-8">
+    <motion.section
+      className="bg-white py-10 px-4 sm:px-6 lg:px-8"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       <div className="max-w-5xl mx-auto">
         {/* Carte avec shape.png comme fond */}
         <div className="relative rounded-3xl overflow-hidden min-h-[200px] flex items-center justify-center">
@@ -76,6 +85,6 @@ export function NewsletterSection() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -1,4 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "motion/react";
+
+const easeOut = [0.22, 1, 0.36, 1];
 
 const TESTIMONIALS = [
   {
@@ -16,8 +21,19 @@ const TESTIMONIALS = [
 ];
 
 export function TestimonialsSection() {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
   return (
-    <section className="bg-white py-16">
+    <motion.section
+      className="bg-white py-16"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="flex items-center justify-between mb-10">
@@ -34,9 +50,15 @@ export function TestimonialsSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+        >
           {TESTIMONIALS.map((t) => (
-            <div key={t.nom} className="relative rounded-2xl overflow-hidden p-6 flex flex-col gap-4 shadow-sm">
+            <motion.div key={t.nom} className="relative rounded-2xl overflow-hidden p-6 flex flex-col gap-4 shadow-sm" variants={cardVariants}>
               {/* Fond dégradé mint→jaune */}
               <Image src="/images/bg-card-testimonial.png" alt="" fill className="object-cover" aria-hidden />
 
@@ -52,10 +74,10 @@ export function TestimonialsSection() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import CountUp from "@/components/ui/CountUp";
+import { motion } from "motion/react";
 
 const STATS = [
   { to: 200, label: "Apprenants", suffix: "+" },
@@ -8,9 +11,16 @@ const STATS = [
   { to: 4.5, label: "avis utilisateurs", isStar: true },
 ];
 
+const easeOut = [0.22, 1, 0.36, 1];
+
 export function StatsSection() {
   return (
-    <section className="bg-white py-8 px-4 sm:px-6 lg:px-8">
+    <motion.section
+      className="bg-white py-8 px-4 sm:px-6 lg:px-8"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 }}
+    >
       <div className="max-w-5xl mx-auto">
         {/* Carte blanche avec ombre */}
         <div className="relative rounded-2xl bg-white shadow-xl px-6 py-6 z-30" style={{ marginTop: "-88px" }}>
@@ -44,6 +54,6 @@ export function StatsSection() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

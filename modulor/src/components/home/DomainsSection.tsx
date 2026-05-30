@@ -1,4 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "motion/react";
+
+const easeOut = [0.22, 1, 0.36, 1];
 
 const DOMAINS = [
   {
@@ -19,8 +24,19 @@ const DOMAINS = [
 ];
 
 export function DomainsSection() {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
   return (
-    <section className="bg-white py-16">
+    <motion.section
+      className="bg-white py-16"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center mb-10">
@@ -32,9 +48,15 @@ export function DomainsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+        >
           {DOMAINS.map((domain) => (
-            <div key={domain.title} className="relative rounded-2xl overflow-hidden p-8 flex flex-col items-center text-center gap-4 hover:shadow-md transition-shadow">
+            <motion.div key={domain.title} className="relative rounded-2xl overflow-hidden p-8 flex flex-col items-center text-center gap-4 hover:shadow-md transition-shadow" variants={cardVariants}>
               {/* Fond dégradé mint→jaune */}
               <Image src="/images/bg-card-domaine.png" alt="" fill className="object-cover" aria-hidden />
               {/* Contenu */}
@@ -45,12 +67,12 @@ export function DomainsSection() {
                 <h3 className="text-lg font-bold text-foreground">{domain.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{domain.description}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <div className="mt-12 border-t border-border" />
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -1,8 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { StarRating } from "@/components/ui/StarRating";
 import { formatCFA } from "@/lib/utils";
+import { motion } from "motion/react";
+
+const easeOut = [0.22, 1, 0.36, 1];
 
 const FORMATIONS = [
   {
@@ -32,8 +37,19 @@ const FORMATIONS = [
 ];
 
 export function FormationsSection() {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
   return (
-    <section className="relative overflow-hidden py-16">
+    <motion.section
+      className="relative overflow-hidden py-16"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       {/* Fond vert clair */}
       <Image src="/images/bg-formations.png" alt="" fill className="object-cover" aria-hidden />
       {/* Pattern */}
@@ -58,9 +74,15 @@ export function FormationsSection() {
         </div>
 
         {/* Grid cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+        >
           {FORMATIONS.map((f) => (
-            <div key={f.id} className="rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-lg transition-shadow group">
+            <motion.div key={f.id} className="rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-lg transition-shadow group" variants={cardVariants}>
               {/* Image */}
               <div className="relative h-44 overflow-hidden">
                 <Image src={f.image} alt={f.titre} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -83,10 +105,10 @@ export function FormationsSection() {
                   </Link>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }
