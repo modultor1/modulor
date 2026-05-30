@@ -7,8 +7,6 @@ import { StarRating } from "@/components/ui/StarRating";
 import { formatCFA } from "@/lib/utils";
 import { motion } from "motion/react";
 
-const easeOut = [0.22, 1, 0.36, 1];
-
 const FORMATIONS = [
   {
     id: "1",
@@ -39,7 +37,7 @@ const FORMATIONS = [
 export function FormationsSection() {
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
   return (
@@ -48,7 +46,7 @@ export function FormationsSection() {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.6 }}
     >
       {/* Fond vert clair */}
       <Image src="/images/bg-formations.png" alt="" fill className="object-cover" aria-hidden />

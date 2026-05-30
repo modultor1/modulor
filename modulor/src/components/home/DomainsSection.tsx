@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { motion } from "motion/react";
 
-const easeOut = [0.22, 1, 0.36, 1];
-
 const DOMAINS = [
   {
     icon: "/images/illu-etudes.png",
@@ -26,7 +24,7 @@ const DOMAINS = [
 export function DomainsSection() {
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
   return (
@@ -35,7 +33,7 @@ export function DomainsSection() {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.6 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 

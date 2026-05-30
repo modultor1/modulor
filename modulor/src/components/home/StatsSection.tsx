@@ -11,8 +11,6 @@ const STATS = [
   { to: 4.5, label: "avis utilisateurs", isStar: true },
 ];
 
-const easeOut = [0.22, 1, 0.36, 1];
-
 export function StatsSection() {
   return (
     <motion.section
@@ -20,7 +18,7 @@ export function StatsSection() {
       style={{ zIndex: 100 }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 }}
+      transition={{ duration: 0.6, delay: 0.8 }}
     >
       <div className="max-w-5xl mx-auto">
         {/* Carte blanche avec ombre */}

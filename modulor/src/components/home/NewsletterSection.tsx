@@ -5,8 +5,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { motion } from "motion/react";
 
-const easeOut = [0.22, 1, 0.36, 1];
-
 export function NewsletterSection() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
@@ -22,7 +20,7 @@ export function NewsletterSection() {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.6 }}
     >
       <div className="max-w-5xl mx-auto">
         {/* Carte avec shape.png comme fond */}
