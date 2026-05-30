@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, ChevronDown, SlidersHorizontal, Loader2 } from "lucide-react";
+import { motion } from "motion/react";
 import { formatCFA } from "@/lib/utils";
 
 const FILTRES = ["Domaine", "Filière", "Spécialité", "Thème"];
@@ -28,7 +29,10 @@ function Stars({ rating }: { rating: number }) {
 /* ─── Hero ──────────────────────────────────────────────────────────── */
 function FormationsHero() {
   return (
-    <section className="relative overflow-hidden w-full" style={{ height: "clamp(400px, 40vw, 520px)", minHeight: "480px" }}>
+    <motion.section className="relative overflow-hidden w-full" style={{ height: "clamp(400px, 40vw, 520px)", minHeight: "480px" }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
       {/* Fond vert clair (comme la home) */}
       <Image src="/images/bg-hero.png" alt="" fill className="object-cover" aria-hidden priority />
       {/* Pattern */}
@@ -42,44 +46,50 @@ function FormationsHero() {
       <div className="relative z-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center" style={{ minHeight: "480px" }}>
           {/* Texte — gauche */}
-          <div className="flex flex-col justify-center gap-3 py-10 lg:py-0 text-center lg:text-left">
-            <p style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "44px", color: "#03251C" }} className="leading-tight">
+          <motion.div className="flex flex-col justify-center gap-3 py-10 lg:py-0 text-center lg:text-left" style={{ marginLeft: "25px" }}
+            initial="hidden"
+            animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } } }}>
+            <motion.p style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "44px", color: "#03251C" }} className="leading-tight"
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}>
               Nos diverses
-            </p>
-            <h1 style={{ fontFamily: "var(--font-montserrat)", fontWeight: 700, fontSize: "96px", color: "#2934F2" }} className="leading-tight">
+            </motion.p>
+            <motion.h1 style={{ fontFamily: "var(--font-montserrat)", fontWeight: 700, fontSize: "96px", color: "#2934F2" }} className="leading-tight"
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}>
               Formations
-            </h1>
-            <p style={{ fontFamily: "var(--font-montserrat)", fontWeight: 500, fontSize: "24px", color: "#21D34C" }} className="leading-tight">
+            </motion.h1>
+            <motion.p style={{ fontFamily: "var(--font-montserrat)", fontWeight: 500, fontSize: "24px", color: "#21D34C" }} className="leading-tight"
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}>
               Une riche diversification dans les domaines les plus recherchées
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
           {/* Femme — droite, ancrée en bas */}
           <div className="relative hidden md:flex justify-center lg:justify-end items-end">
             {/* Bulle bleue — haut droite */}
-            <div className="absolute z-20" style={{ top: "8%", left: "60%", transform: "translateX(-120%)" }}>
+            <div className="absolute z-20" style={{ top: "8%", left: "60%", transform: "translateX(-180%)" }}>
               <Image src="/images/bubble-blue-light.png" alt="" width={100} height={125} className="object-contain" />
             </div>
 
             {/* Bulle verte petite — centre */}
-            <div className="absolute z-20" style={{ top: "65%", left: "15%" }}>
+            <div className="absolute z-20" style={{ top: "65%", left: "0%" }}>
               <Image src="/images/bubble-green.png" alt="" width={48} height={48} className="object-contain" />
             </div>
 
             {/* Bulle bleue foncée — bas droite */}
-            <div className="absolute z-20" style={{ bottom: "12%", right: "12%", transform: "translateY(40px) translateX(10px)" }}>
+            <div className="absolute z-20" style={{ bottom: "12%", right: "12%", transform: "translateY(40px) translateX(-40px)" }}>
               <Image src="/images/bubble-blue-dark.png" alt="" width={52} height={52} className="object-contain" />
             </div>
 
             {/* Femme */}
-            <div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px) translateX(-65px) scale(1.25)" }}>
+            <div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px) translateX(-125px) scale(1.25)" }}>
               <Image src="/images/formations-hero-woman.png" alt="Formations Modulor" width={1313} height={1275}
                 className="object-contain" priority />
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -199,12 +209,21 @@ export default function FormationsPage() {
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const displayed  = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
+
   return (
     <>
       <FormationsHero />
       <FiltreBar onFilter={() => {}} />
 
-      <section className="bg-white py-8 px-4 sm:px-6 lg:px-8">
+      <motion.section className="bg-white py-8 px-4 sm:px-6 lg:px-8"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}>
         <div className="max-w-7xl mx-auto">
           <h2 className="text-lg sm:text-xl font-bold text-foreground mb-6">
             Nos différentes formations
@@ -222,16 +241,24 @@ export default function FormationsPage() {
               <p className="text-lg font-bold text-foreground">Aucun résultat</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-4">
-              {displayed.map((f) => <FormationCard key={f.id} f={f} />)}
-            </div>
+            <motion.div className="flex flex-col gap-4"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={{ visible: { transition: { staggerChildren: 0.15 } } }}>
+              {displayed.map((f) => (
+                <motion.div key={f.id} variants={cardVariants}>
+                  <FormationCard f={f} />
+                </motion.div>
+              ))}
+            </motion.div>
           )}
 
           {totalPages > 1 && (
             <Pagination current={page} total={totalPages} onChange={setPage} />
           )}
         </div>
-      </section>
+      </motion.section>
     </>
   );
 }
