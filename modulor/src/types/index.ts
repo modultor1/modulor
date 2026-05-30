@@ -15,17 +15,17 @@ export interface Formation {
   titre: string;
   description: string;
   domaine: string;
-  filiere: string;
+  filiere?: string;
   specialite?: string;
   theme?: string;
   prix: number;
   note: number;
-  nbAvis: number;
+  nbAvis?: number;
   image: string;
-  formateur: string;
+  formateur?: string;
   duree?: string;
   niveau?: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface CartItem {
