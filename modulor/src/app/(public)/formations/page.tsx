@@ -163,23 +163,23 @@ function FormationCard({ f }: { f: any }) {
 /* ─── Pagination ────────────────────────────────────────────────────── */
 function Pagination({ current, total, onChange }: { current: number; total: number; onChange: (p: number) => void }) {
   return (
-    <div className="flex items-center justify-center gap-2 mt-8">
+    <div className="flex items-center justify-center gap-3 mt-8">
       <button onClick={() => onChange(Math.max(1, current - 1))}
-        className="flex items-center justify-center text-foreground hover:text-primary transition-colors text-lg">
+        className="flex items-center justify-center w-10 h-10 text-foreground hover:text-primary transition-colors text-xl font-bold cursor-pointer">
         ‹
       </button>
       {Array.from({ length: Math.min(7, total) }).map((_, i) => (
         <button key={i} onClick={() => onChange(i + 1)}
-          className={`text-sm transition-all ${
+          className={`w-10 h-10 flex items-center justify-center text-base font-bold transition-all cursor-pointer rounded ${
             current === i + 1
-              ? "font-bold text-foreground"
-              : "text-muted-foreground hover:text-foreground"
+              ? "font-bold text-foreground bg-muted"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
           }`}>
           {i + 1}
         </button>
       ))}
       <button onClick={() => onChange(Math.min(total, current + 1))}
-        className="flex items-center justify-center text-foreground hover:text-primary transition-colors text-lg">
+        className="flex items-center justify-center w-10 h-10 text-foreground hover:text-primary transition-colors text-xl font-bold cursor-pointer">
         ›
       </button>
     </div>
