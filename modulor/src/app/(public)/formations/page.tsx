@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, ChevronDown, SlidersHorizontal, Loader2 } from "lucide-react";
+import { ChevronDown, SlidersHorizontal, Loader2, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import { formatCFA } from "@/lib/utils";
 
@@ -123,8 +123,12 @@ function FiltreBar({ onFilter }: { onFilter: (filtre: string) => void }) {
 
 /* ─── Carte formation (horizontal) ─────────────────────────────────── */
 function FormationCard({ f }: { f: any }) {
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("fr-FR", { style: "decimal", minimumFractionDigits: 0 }).format(price) + "f CFA";
+  };
+
   return (
-    <div className="relative rounded-2xl overflow-hidden flex flex-col sm:flex-row gap-0 shadow-sm hover:shadow-md transition-shadow">
+    <div className="relative rounded-2xl overflow-hidden flex flex-col sm:flex-row gap-0 shadow-sm hover:shadow-md transition-shadow" style={{ backgroundColor: "#F9FBF0" }}>
       <Image src="/images/formations-bg-card.png" alt="" fill className="object-cover" aria-hidden />
 
       {/* Thumbnail */}
@@ -136,13 +140,13 @@ function FormationCard({ f }: { f: any }) {
       <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 flex-1">
         <div className="flex flex-col gap-2">
           <span className="text-xs font-bold text-primary">{f.domaine}</span>
-          <p className="text-sm font-bold text-foreground leading-snug max-w-xs">{f.titre}</p>
+          <p className="text-sm font-bold leading-snug max-w-xs" style={{ color: "#2934F2" }}>{f.titre}</p>
           <Stars rating={f.note} />
         </div>
 
         {/* Prix + bouton */}
         <div className="flex flex-row sm:flex-col items-center sm:items-end gap-3 shrink-0">
-          <span className="text-lg font-bold text-foreground">{formatCFA(f.prix)}</span>
+          <span className="text-lg font-bold" style={{ color: "#21D34C" }}>{formatPrice(f.prix)}</span>
           <Link href={`/formations/${f.id}`}>
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold text-white text-xs whitespace-nowrap cursor-pointer hover:opacity-90 transition-opacity"
               style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
@@ -161,23 +165,22 @@ function Pagination({ current, total, onChange }: { current: number; total: numb
   return (
     <div className="flex items-center justify-center gap-2 mt-8">
       <button onClick={() => onChange(Math.max(1, current - 1))}
-        className="w-8 h-8 flex items-center justify-center rounded-full border border-border hover:border-primary hover:text-primary transition-colors">
-        <ChevronLeft size={16} />
+        className="flex items-center justify-center text-foreground hover:text-primary transition-colors text-lg">
+        ‹
       </button>
-      {Array.from({ length: total }).map((_, i) => (
+      {Array.from({ length: Math.min(7, total) }).map((_, i) => (
         <button key={i} onClick={() => onChange(i + 1)}
-          className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold transition-all ${
+          className={`text-sm transition-all ${
             current === i + 1
-              ? "text-white shadow"
-              : "border border-border text-muted-foreground hover:border-primary hover:text-primary"
-          }`}
-          style={current === i + 1 ? { background: "linear-gradient(to right, #2934f2, #57f27d)" } : {}}>
+              ? "font-bold text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          }`}>
           {i + 1}
         </button>
       ))}
       <button onClick={() => onChange(Math.min(total, current + 1))}
-        className="w-8 h-8 flex items-center justify-center rounded-full border border-border hover:border-primary hover:text-primary transition-colors">
-        <ChevronRight size={16} />
+        className="flex items-center justify-center text-foreground hover:text-primary transition-colors text-lg">
+        ›
       </button>
     </div>
   );
@@ -217,7 +220,6 @@ export default function FormationsPage() {
   return (
     <>
       <FormationsHero />
-      <FiltreBar onFilter={() => {}} />
 
       <motion.section className="bg-white py-8 px-4 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 30 }}
@@ -228,6 +230,10 @@ export default function FormationsPage() {
           <h2 className="text-lg sm:text-xl font-bold text-foreground mb-6">
             Nos différentes formations
           </h2>
+
+          <div className="mb-6">
+            <FiltreBar onFilter={() => {}} />
+          </div>
 
           {loading ? (
             <div className="flex flex-col items-center gap-4 py-20">
