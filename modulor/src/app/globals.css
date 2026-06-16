@@ -2,7 +2,7 @@
 
 @theme inline {
   /* Typography */
-  --font-sans: var(--font-comfortaa), "Comfortaa", sans-serif;
+  --font-sans: var(--font-tt-interphases), "TTInterphases Pro", sans-serif;
 
   /* Modulor Brand Colors */
   --color-primary:        #2934f2;

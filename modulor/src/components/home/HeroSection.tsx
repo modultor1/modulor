@@ -54,15 +54,15 @@ export function HeroSection() {
             animate={shouldReduceMotion ? false : "visible"}
             variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.3 } } }}
           >
-            <motion.p className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "44px", color: "#03251C" }}>
+            <motion.p className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 600, fontSize: "44px", color: "#03251C" }}>
               Nous vous
             </motion.p>
-            <motion.h1 className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-montserrat)", fontWeight: 700, fontSize: "66px", color: "#2934F2" }}>
+            <motion.h1 className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 700, fontSize: "66px", color: "#2934F2" }}>
               Formons&nbsp;!
             </motion.h1>
-            <motion.p className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "38px", color: "#2934F2" }}>
+            <motion.p className="leading-tight" variants={textVariants} style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 600, fontSize: "38px", color: "#2934F2" }}>
               Nous donnons vie{" "}
-              <span style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "28px", color: "#21D34C" }}>à vos projets</span>
+              <span style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 600, fontSize: "28px", color: "#21D34C" }}>à vos projets</span>
             </motion.p>
             <motion.div className="mt-3 flex justify-center lg:justify-start" variants={buttonVariants}>
               <Link href="/formations">

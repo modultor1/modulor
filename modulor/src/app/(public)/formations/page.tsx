@@ -50,15 +50,15 @@ function FormationsHero() {
             initial="hidden"
             animate="visible"
             variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } } }}>
-            <motion.p style={{ fontFamily: "var(--font-montserrat)", fontWeight: 600, fontSize: "44px", color: "#03251C" }} className="leading-tight"
+            <motion.p style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 600, fontSize: "44px", color: "#03251C" }} className="leading-tight"
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}>
               Nos diverses
             </motion.p>
-            <motion.h1 style={{ fontFamily: "var(--font-montserrat)", fontWeight: 700, fontSize: "96px", color: "#2934F2" }} className="leading-tight"
+            <motion.h1 style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 700, fontSize: "96px", color: "#2934F2" }} className="leading-tight"
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}>
               Formations
             </motion.h1>
-            <motion.p style={{ fontFamily: "var(--font-montserrat)", fontWeight: 500, fontSize: "24px", color: "#21D34C" }} className="leading-tight"
+            <motion.p style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 500, fontSize: "24px", color: "#21D34C" }} className="leading-tight"
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}>
               Une riche diversification dans les domaines les plus recherchées
             </motion.p>

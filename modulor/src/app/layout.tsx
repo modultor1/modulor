@@ -1,23 +1,16 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Montserrat } from "next/font/google";
 import "./globals.css";
 
-const comfortaa = localFont({
+const ttInterphases = localFont({
   src: [
-    { path: "../fonts/Comfortaa-Light.ttf",   weight: "300", style: "normal" },
-    { path: "../fonts/Comfortaa-Regular.ttf", weight: "400", style: "normal" },
-    { path: "../fonts/Comfortaa-Bold.ttf",    weight: "700", style: "normal" },
+    { path: "../fonts/TTInterphasesPro-Light.ttf",    weight: "300", style: "normal" },
+    { path: "../fonts/TTInterphasesPro-Regular.ttf",  weight: "400", style: "normal" },
+    { path: "../fonts/TTInterphasesPro-DemiBold.ttf", weight: "600", style: "normal" },
+    { path: "../fonts/TTInterphasesPro-Bold.ttf",     weight: "700", style: "normal" },
   ],
-  variable: "--font-comfortaa",
+  variable: "--font-tt-interphases",
   display: "swap",
-});
-
-const montserrat = Montserrat({
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-montserrat",
-  display: "swap",
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +24,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" className={`${comfortaa.variable} ${montserrat.variable} h-full`}>
+    <html lang="fr" className={`${ttInterphases.variable} h-full`}>
       {/* suppressHydrationWarning évite le conflit avec les extensions navigateur */}
       <body className="min-h-full flex flex-col antialiased" suppressHydrationWarning>{children}</body>
     </html>
