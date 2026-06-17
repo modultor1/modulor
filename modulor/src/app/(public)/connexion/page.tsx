@@ -31,7 +31,7 @@ function FormInput({ label, type = "text", placeholder, value, onChange, error }
 /* ─── Hero ──────────────────────────────────────────────────────────── */
 function ConnexionHero() {
   return (
-    <div className="relative overflow-hidden" style={{ minHeight: 500 }}>
+    <div className="relative overflow-hidden" style={{ minHeight: 580 }}>
       {/* Fond vert clair comme home */}
       <Image src="/images/bg-hero.png" alt="" fill className="object-cover" aria-hidden priority />
       {/* Patterns */}
@@ -47,7 +47,7 @@ function ConnexionHero() {
           Rejoignez-nous ici
         </h1>
 
-        <div className="relative w-full flex justify-center items-center" style={{ height: 420 }}>
+        <div className="relative w-full flex justify-center items-center" style={{ height: 520 }}>
           {/* Bulle verte petite — haut gauche */}
           <Image src="/images/connexion-bubble-green-left.png" alt="" width={80} height={80}
             className="absolute z-20" style={{ top: "8%", left: "12%" }} />
@@ -64,10 +64,14 @@ function ConnexionHero() {
           <Image src="/images/connexion-bubble-green-right.png" alt="" width={95} height={95}
             className="absolute z-20" style={{ bottom: "5%", right: "10%" }} />
 
-          {/* Image homme — grande, centrée, fondée */}
+          {/* Image homme — grande, centrée, fondée avec dégradé */}
           <div className="relative z-10 flex items-center justify-center">
-            <Image src="/images/connexion-man.png" alt="Bienvenue" width={650} height={520}
-              className="object-contain drop-shadow-lg" priority />
+            <div className="relative" style={{
+              background: "linear-gradient(to bottom, transparent 0%, rgba(240, 253, 244, 0.3) 80%, rgba(240, 253, 244, 0.8) 100%)"
+            }}>
+              <Image src="/images/connexion-man.png" alt="Bienvenue" width={750} height={620}
+                className="object-contain drop-shadow-lg" priority />
+            </div>
           </div>
         </div>
       </div>
@@ -111,8 +115,13 @@ function ConnexionForm() {
     <>
       <ConnexionHero />
 
-      <section className="bg-white py-10 sm:py-12 px-4">
-        <div className="max-w-md mx-auto flex flex-col gap-6">
+      <section className="relative py-10 sm:py-12 px-4">
+        {/* Fond vert derrière le formulaire */}
+        <Image src="/images/bg-hero.png" alt="" fill className="object-cover absolute top-0 left-0 z-0" aria-hidden />
+        <div className="absolute inset-0 pointer-events-none z-0 hidden lg:block">
+          <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-20" aria-hidden />
+        </div>
+        <div className="relative z-10 max-w-md mx-auto flex flex-col gap-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-primary">Connectez-vous</h2>
             <p className="text-sm text-muted-foreground mt-1">Tu crées, Modulor s&apos;occupe du reste</p>
