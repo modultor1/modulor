@@ -31,34 +31,44 @@ function FormInput({ label, type = "text", placeholder, value, onChange, error }
 /* ─── Hero ──────────────────────────────────────────────────────────── */
 function ConnexionHero() {
   return (
-    <div className="relative overflow-hidden bg-white" style={{ minHeight: 360 }}>
-      <Image src="/images/connexion-bg.png" alt="" fill className="object-cover" aria-hidden />
-      <div className="absolute inset-0 pointer-events-none">
-        <Image src="/images/connexion-pattern.png" alt="" fill className="object-cover opacity-40" aria-hidden />
+    <div className="relative overflow-hidden" style={{ minHeight: 500 }}>
+      {/* Fond vert clair comme home */}
+      <Image src="/images/bg-hero.png" alt="" fill className="object-cover" aria-hidden priority />
+      {/* Patterns */}
+      <div className="absolute left-0 top-0 h-full w-[180px] pointer-events-none hidden lg:block">
+        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-60" aria-hidden />
+      </div>
+      <div className="absolute right-0 top-0 h-full w-[180px] pointer-events-none hidden lg:block">
+        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-60 [transform:scaleX(-1)]" aria-hidden />
       </div>
 
       <div className="relative z-10 flex flex-col items-center pt-6 pb-0">
-        <h1 className="text-2xl md:text-3xl font-bold text-primary text-center mb-3">
+        <h1 className="text-2xl md:text-3xl font-bold text-primary text-center mb-8">
           Rejoignez-nous ici
         </h1>
 
-        <div className="relative w-full flex justify-center items-end" style={{ height: 320 }}>
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-full pointer-events-none">
-            <Image src="/images/connexion-bg-man.png" alt="" fill className="object-cover" aria-hidden />
+        <div className="relative w-full flex justify-center items-center" style={{ height: 420 }}>
+          {/* Bulle verte petite — haut gauche */}
+          <Image src="/images/connexion-bubble-green-left.png" alt="" width={80} height={80}
+            className="absolute z-20" style={{ top: "8%", left: "12%" }} />
+
+          {/* Bulle bleue grande — haut droite */}
+          <Image src="/images/connexion-bubble-blue-top.png" alt="" width={130} height={130}
+            className="absolute z-20" style={{ top: "5%", right: "10%" }} />
+
+          {/* Bulle bleue moyenne — bas gauche */}
+          <Image src="/images/connexion-bubble-blue-bottom.png" alt="" width={100} height={100}
+            className="absolute z-20" style={{ bottom: "8%", left: "8%" }} />
+
+          {/* Bulle verte moyenne — bas droite */}
+          <Image src="/images/connexion-bubble-green-right.png" alt="" width={95} height={95}
+            className="absolute z-20" style={{ bottom: "5%", right: "10%" }} />
+
+          {/* Image homme — grande, centrée, fondée */}
+          <div className="relative z-10 flex items-center justify-center">
+            <Image src="/images/connexion-man.png" alt="Bienvenue" width={650} height={520}
+              className="object-contain drop-shadow-lg" priority />
           </div>
-          <Image src="/images/connexion-bubble-green-left.png" alt="" width={100} height={100}
-            className="absolute top-10 left-[8%] z-20 animate-bounce" style={{ animationDuration: "3.5s" }} />
-          <Image src="/images/connexion-bubble-blue-top.png" alt="" width={110} height={110}
-            className="absolute top-4 right-[8%] z-20 animate-bounce" style={{ animationDuration: "3s", animationDelay: "0.5s" }} />
-          <Image src="/images/connexion-bubble-green-right.png" alt="" width={85} height={85}
-            className="absolute bottom-24 right-[6%] z-20 animate-bounce" style={{ animationDuration: "4s", animationDelay: "1s" }} />
-          <div className="relative z-10">
-            <Image src="/images/connexion-man.png" alt="Bienvenue" width={500} height={320}
-              className="object-contain object-bottom drop-shadow-lg" style={{ height: 320, width: 500 }} priority />
-          </div>
-          <Image src="/images/connexion-bubble-blue-bottom.png" alt="" width={95} height={85}
-            className="absolute -bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce"
-            style={{ animationDuration: "3.2s", animationDelay: "0.8s" }} />
         </div>
       </div>
     </div>
