@@ -32,15 +32,6 @@ function FormInput({ label, type = "text", placeholder, value, onChange, error }
 function ConnexionHero() {
   return (
     <div className="relative overflow-hidden" style={{ minHeight: 580 }}>
-      {/* Fond vert clair comme home */}
-      <Image src="/images/bg-hero.png" alt="" fill className="object-cover" aria-hidden priority />
-      {/* Patterns */}
-      <div className="absolute left-0 top-0 h-full w-[180px] pointer-events-none hidden lg:block">
-        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-60" aria-hidden />
-      </div>
-      <div className="absolute right-0 top-0 h-full w-[180px] pointer-events-none hidden lg:block">
-        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-60 [transform:scaleX(-1)]" aria-hidden />
-      </div>
 
       <div className="relative z-10 flex flex-col items-center pt-6 pb-0">
         <h1 className="text-2xl md:text-3xl font-bold text-primary text-center mb-8">
@@ -70,7 +61,11 @@ function ConnexionHero() {
               background: "linear-gradient(to bottom, transparent 0%, rgba(240, 253, 244, 0.3) 80%, rgba(240, 253, 244, 0.8) 100%)"
             }}>
               <Image src="/images/connexion-man.png" alt="Bienvenue" width={750} height={620}
-                className="object-contain drop-shadow-lg" priority />
+                className="object-contain drop-shadow-lg" priority
+                style={{
+                  maskImage: "linear-gradient(to bottom, black 45%, transparent 90%)",
+                  WebkitMaskImage: "linear-gradient(to bottom, black 45%, transparent 90%)"
+                }} />
             </div>
           </div>
         </div>
@@ -112,15 +107,21 @@ function ConnexionForm() {
   }
 
   return (
-    <>
+    <div style={{
+      background: "linear-gradient(to bottom, #F3F7F5 0%, #E4FEEC 100%)",
+      position: "relative"
+    }}>
+      {/* Patterns doodles par-dessus le dégradé */}
+      <div className="absolute inset-0 pointer-events-none z-5 hidden lg:block">
+        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-30" aria-hidden />
+      </div>
+      <div className="absolute inset-0 pointer-events-none z-5 hidden lg:block">
+        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-30 [transform:scaleX(-1)]" aria-hidden />
+      </div>
+
       <ConnexionHero />
 
       <section className="relative py-10 sm:py-12 px-4">
-        {/* Fond vert derrière le formulaire */}
-        <Image src="/images/bg-hero.png" alt="" fill className="object-cover absolute top-0 left-0 z-0" aria-hidden />
-        <div className="absolute inset-0 pointer-events-none z-0 hidden lg:block">
-          <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-20" aria-hidden />
-        </div>
         <div className="relative z-10 max-w-md mx-auto flex flex-col gap-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-primary">Connectez-vous</h2>
@@ -159,7 +160,7 @@ function ConnexionForm() {
           </Link>
         </div>
       </section>
-    </>
+    </div>
   );
 }
 
