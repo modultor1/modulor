@@ -39,34 +39,31 @@ function ConnexionHero() {
         </h1>
 
         <div className="relative w-full flex justify-center items-center" style={{ height: 520 }}>
-          {/* Bulle verte petite — haut gauche */}
-          <Image src="/images/connexion-bubble-green-left.png" alt="" width={80} height={80}
-            className="absolute z-20" style={{ top: "8%", left: "12%" }} />
+          {/* Bulles (hors du conteneur maské, donc opaques) */}
+          {/* Bulle verte petite — haut gauche (agrandie + rapprochée) */}
+          <Image src="/images/connexion-bubble-green-left.png" alt="" width={90} height={90}
+            className="absolute z-5" style={{ top: "19%", left: "35%", opacity: 1 }} />
 
-          {/* Bulle bleue grande — haut droite */}
-          <Image src="/images/connexion-bubble-blue-top.png" alt="" width={130} height={130}
-            className="absolute z-20" style={{ top: "5%", right: "10%" }} />
+          {/* Bulle bleue grande — haut droite (agrandie + rapprochée) */}
+          <Image src="/images/connexion-bubble-blue-top.png" alt="" width={145} height={145}
+            className="absolute z-5" style={{ top: "7%", right: "28%", opacity: 1 }} />
 
-          {/* Bulle bleue moyenne — bas gauche */}
-          <Image src="/images/connexion-bubble-blue-bottom.png" alt="" width={100} height={100}
-            className="absolute z-20" style={{ bottom: "8%", left: "8%" }} />
+          {/* Bulle bleue moyenne — bas gauche (agrandie + rapprochée) */}
+          <Image src="/images/connexion-bubble-blue-bottom.png" alt="" width={148} height={148}
+            className="absolute z-5" style={{ bottom: "18%", left: "27%", opacity: 1 }} />
 
-          {/* Bulle verte moyenne — bas droite */}
-          <Image src="/images/connexion-bubble-green-right.png" alt="" width={95} height={95}
-            className="absolute z-20" style={{ bottom: "5%", right: "10%" }} />
+          {/* Bulle verte moyenne — bas droite (agrandie + rapprochée) */}
+          <Image src="/images/connexion-bubble-green-right.png" alt="" width={120} height={120}
+            className="absolute z-5" style={{ bottom: "25%", right: "27%", opacity: 1 }} />
 
-          {/* Image homme — grande, centrée, fondée avec dégradé */}
+          {/* Image homme — grande, centrée, mask appliqué UNIQUEMENT à l'image */}
           <div className="relative z-10 flex items-center justify-center">
-            <div className="relative" style={{
-              background: "linear-gradient(to bottom, transparent 0%, rgba(240, 253, 244, 0.3) 80%, rgba(240, 253, 244, 0.8) 100%)"
-            }}>
-              <Image src="/images/connexion-man.png" alt="Bienvenue" width={750} height={620}
-                className="object-contain drop-shadow-lg" priority
-                style={{
-                  maskImage: "linear-gradient(to bottom, black 45%, transparent 90%)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black 45%, transparent 90%)"
-                }} />
-            </div>
+            <Image src="/images/connexion-man.png" alt="Bienvenue" width={750} height={620}
+              className="object-contain drop-shadow-lg" priority
+              style={{
+                maskImage: "linear-gradient(to bottom, black 45%, transparent 90%)",
+                WebkitMaskImage: "linear-gradient(to bottom, black 45%, transparent 90%)"
+              }} />
           </div>
         </div>
       </div>
