@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthStore, type UserRole } from "@/store/authStore";
 import { PasswordInput } from "@/components/ui/PasswordInput";
@@ -99,31 +100,51 @@ export default function InscriptionPage() {
         <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-30 [transform:scaleX(-1)]" aria-hidden />
       </div>
 
-      <div className="relative z-10 max-w-md mx-auto flex flex-col gap-6">
+      <motion.div className="relative z-10 max-w-md mx-auto flex flex-col gap-6"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
 
-        <div className="text-center">
+        <motion.div className="text-center"
+          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
           <h1 className="text-2xl font-bold text-primary">Inscrivez-vous</h1>
           <p className="text-sm text-muted-foreground mt-1">Tu crées, Modulor s&apos;occupe du reste</p>
-        </div>
+        </motion.div>
 
         {error && (
-          <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600 text-center">
+          <motion.div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600 text-center"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
             {error}
-          </div>
+          </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <FormInput label="Nom/Prénoms" placeholder="Votre nom complet" value={nom} onChange={setNom} />
-          <FormInput label="Email" type="email" placeholder="votre@email.com" value={email} onChange={setEmail} />
-          <PasswordInput label="Mot de passe" value={password} onChange={setPassword} />
-          <PasswordInput label="Confirmation de mot de passe" value={confirm} onChange={setConfirm} />
+        <motion.form onSubmit={handleSubmit} className="flex flex-col gap-4"
+          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+            <FormInput label="Nom/Prénoms" placeholder="Votre nom complet" value={nom} onChange={setNom} />
+          </motion.div>
+          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+            <FormInput label="Email" type="email" placeholder="votre@email.com" value={email} onChange={setEmail} />
+          </motion.div>
+          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+            <PasswordInput label="Mot de passe" value={password} onChange={setPassword} />
+          </motion.div>
+          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+            <PasswordInput label="Confirmation de mot de passe" value={confirm} onChange={setConfirm} />
+          </motion.div>
 
           {/* Type de profil */}
-          <div className="flex flex-col gap-2 mt-1">
+          <motion.div className="flex flex-col gap-2 mt-1"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
             <label className="text-sm font-semibold text-foreground">Type de profil</label>
             <div className="flex flex-col gap-2.5">
-              {PROFILS.map((p) => (
-                <label key={p.id} className="flex items-center gap-3 cursor-pointer group">
+              {PROFILS.map((p, idx) => (
+                <motion.label key={p.id} className="flex items-center gap-3 cursor-pointer group"
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.4, delay: idx * 0.05 }}>
                   <input type="radio" name="profil" value={p.id}
                     checked={profil === p.id} onChange={() => setProfil(p.id)} className="sr-only" />
                   <div className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-all ${
@@ -136,26 +157,29 @@ export default function InscriptionPage() {
                     )}
                   </div>
                   <span className="text-sm text-foreground">{p.label}</span>
-                </label>
+                </motion.label>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <button type="submit" disabled={loading}
+          <motion.button type="submit" disabled={loading}
             className="w-full py-4 rounded-xl font-bold text-white text-base mt-2 hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60"
-            style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+            style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
             {loading ? "Création du compte..." : "Créer mon compte"}
-          </button>
-        </form>
+          </motion.button>
+        </motion.form>
 
-        <p className="text-center text-sm text-muted-foreground">
+        <motion.p className="text-center text-sm text-muted-foreground"
+          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
           Déjà un compte ?{" "}
           <Link href="/connexion" className="text-primary font-bold hover:underline">Se connecter</Link>
-        </p>
-        <p className="text-center text-xs text-muted-foreground">
+        </motion.p>
+        <motion.p className="text-center text-xs text-muted-foreground"
+          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
           Rejoignez Modulor et commencez votre parcours d&apos;apprentissage.
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
     </section>
   );
 }
