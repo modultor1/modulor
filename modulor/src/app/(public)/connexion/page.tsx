@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "motion/react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthStore } from "@/store/authStore";
 import { PasswordInput } from "@/components/ui/PasswordInput";
@@ -31,7 +32,10 @@ function FormInput({ label, type = "text", placeholder, value, onChange, error }
 /* ─── Hero ──────────────────────────────────────────────────────────── */
 function ConnexionHero() {
   return (
-    <div className="relative overflow-hidden" style={{ minHeight: 580 }}>
+    <motion.div className="relative overflow-hidden" style={{ minHeight: 580 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
 
       <div className="relative z-10 flex flex-col items-center pt-6 pb-0">
         <h1 className="text-2xl md:text-3xl font-bold text-primary text-center mb-8">
@@ -67,7 +71,7 @@ function ConnexionHero() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -118,20 +122,31 @@ function ConnexionForm() {
 
       <ConnexionHero />
 
-      <section className="relative py-10 sm:py-12 px-4">
-        <div className="relative z-10 max-w-md mx-auto flex flex-col gap-6">
-          <div className="text-center">
+      <motion.section className="relative py-10 sm:py-12 px-4"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}>
+        <motion.div className="relative z-10 max-w-md mx-auto flex flex-col gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
+          <motion.div className="text-center"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
             <h2 className="text-2xl font-bold text-primary">Connectez-vous</h2>
             <p className="text-sm text-muted-foreground mt-1">Tu crées, Modulor s&apos;occupe du reste</p>
-          </div>
+          </motion.div>
 
           {error && (
-            <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600 text-center">
+            <motion.div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600 text-center"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
               {error}
-            </div>
+            </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <motion.form onSubmit={handleSubmit} className="flex flex-col gap-4"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
             <FormInput label="Email" type="email" placeholder="votre@email.com"
               value={email} onChange={setEmail} />
             <PasswordInput label="Mot de passe"
@@ -146,17 +161,21 @@ function ConnexionForm() {
               style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
               {loading ? "Connexion..." : "Se connecter"}
             </button>
-          </form>
+          </motion.form>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <motion.p className="text-center text-sm text-muted-foreground"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
             Pas encore de compte ?{" "}
             <Link href="/inscription" className="text-primary font-bold hover:underline">Créer un compte</Link>
-          </p>
-          <Link href="/inscription" className="text-center text-sm text-primary hover:underline">
-            Accédez à votre espace personnel Modulor
-          </Link>
-        </div>
-      </section>
+          </motion.p>
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+            <Link href="/inscription" className="text-center text-sm text-primary hover:underline">
+              Accédez à votre espace personnel Modulor
+            </Link>
+          </motion.div>
+        </motion.div>
+      </motion.section>
     </div>
   );
 }

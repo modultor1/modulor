@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { motion } from "motion/react";
 import { createClient } from "@/lib/supabase/client";
 import {
   Bell, Settings, Clock, CheckCircle2, Menu, X, ChevronRight,
@@ -188,7 +189,11 @@ const COLORS = ["#2934f2", "#57f27d", "#ef4444", "#f59e0b", "#8b5cf6"];
 function FormationsActives({ enrollments }: { enrollments: Enrollment[] }) {
   const actives = enrollments.filter((e) => !e.terminee);
   return (
-    <div className="flex flex-col gap-3">
+    <motion.div className="flex flex-col gap-3"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}>
       <h3 className="text-sm font-bold text-primary">Formations actives</h3>
 
       <div className="relative rounded-2xl overflow-hidden p-4">
@@ -226,7 +231,7 @@ function FormationsActives({ enrollments }: { enrollments: Enrollment[] }) {
           Découvrir <ChevronRight size={14} />
         </span>
       </Link>
-    </div>
+    </motion.div>
   );
 }
 
@@ -234,7 +239,11 @@ function FormationsActives({ enrollments }: { enrollments: Enrollment[] }) {
 function FormationsTerminees({ enrollments }: { enrollments: Enrollment[] }) {
   const done = enrollments.filter((e) => e.terminee);
   return (
-    <div className="flex flex-col gap-3">
+    <motion.div className="flex flex-col gap-3"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}>
       <h3 className="text-sm font-bold text-primary">Formations terminées</h3>
 
       <div className="relative rounded-2xl overflow-hidden p-4">
@@ -271,7 +280,7 @@ function FormationsTerminees({ enrollments }: { enrollments: Enrollment[] }) {
           Revoir <ChevronRight size={14} />
         </span>
       </Link>
-    </div>
+    </motion.div>
   );
 }
 
@@ -333,7 +342,11 @@ function DetailsTab({ userName, userEmail, userRole, enrollments }: {
   const terminees = enrollments.filter((e) => e.terminee).length;
 
   return (
-    <div className="flex flex-col gap-4">
+    <motion.div className="flex flex-col gap-4"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}>
       <div className="relative rounded-2xl overflow-hidden p-5">
         <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
         <div className="relative z-10 flex flex-col gap-3">
@@ -352,19 +365,24 @@ function DetailsTab({ userName, userEmail, userRole, enrollments }: {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <motion.div className="grid grid-cols-2 sm:grid-cols-3 gap-3"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
         {[
           { label: "Formations achetées",  value: String(enrollments.length) },
           { label: "Formations terminées", value: String(terminees) },
           { label: "En cours",             value: String(actives) },
         ].map((stat) => (
-          <div key={stat.label} className="relative rounded-2xl overflow-hidden p-4 text-center">
+          <motion.div key={stat.label} className="relative rounded-2xl overflow-hidden p-4 text-center"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
             <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
             <p className="relative z-10 text-2xl font-bold text-primary">{stat.value}</p>
             <p className="relative z-10 text-xs text-muted-foreground mt-1">{stat.label}</p>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       <div className="relative rounded-2xl overflow-hidden p-5">
         <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
@@ -390,7 +408,7 @@ function DetailsTab({ userName, userEmail, userRole, enrollments }: {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -446,10 +464,14 @@ function ActivitesContent({ enrollments, notifications }: {
   }));
 
   return (
-    <div className="flex flex-col gap-5">
+    <motion.div className="flex flex-col gap-5"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}>
       <Section title="Dernières activités"    color="#57f27d" items={activites}  />
       <Section title="Notifications récentes" color="#f59e0b" items={notifItems} />
-    </div>
+    </motion.div>
   );
 }
 
@@ -637,10 +659,14 @@ export default function TableauDeBordPage() {
               ) : (
                 <>
                   {activeSection === "formations" && activeTab === "tableau" && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-5"
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-100px" }}
+                      transition={{ duration: 0.6 }}>
                       {hasActive ? <FormationsActives enrollments={enrollments} /> : <EmptyFormations />}
                       {hasTerminee ? <FormationsTerminees enrollments={enrollments} /> : <EmptyTerminees />}
-                    </div>
+                    </motion.div>
                   )}
                   {activeSection === "formations" && activeTab === "details" && (
                     <DetailsTab userName={userName} userEmail={userEmail} userRole={userRole} enrollments={enrollments} />
