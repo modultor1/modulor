@@ -67,25 +67,37 @@ function FormationsHero() {
           {/* Femme — droite, ancrée en bas */}
           <div className="relative hidden md:flex justify-center lg:justify-end items-end">
             {/* Bulle bleue — haut droite */}
-            <div className="absolute z-20" style={{ top: "8%", left: "60%", transform: "translateX(-180%)" }}>
+            <motion.div className="absolute z-20" style={{ top: "8%", left: "60%", transform: "translateX(-180%)" }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.8 }}>
               <Image src="/images/bubble-blue-light.png" alt="" width={100} height={125} className="object-contain" />
-            </div>
+            </motion.div>
 
             {/* Bulle verte petite — centre */}
-            <div className="absolute z-20" style={{ top: "65%", left: "0%" }}>
+            <motion.div className="absolute z-20" style={{ top: "65%", left: "0%" }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.95 }}>
               <Image src="/images/bubble-green.png" alt="" width={48} height={48} className="object-contain" />
-            </div>
+            </motion.div>
 
             {/* Bulle bleue foncée — bas droite */}
-            <div className="absolute z-20" style={{ bottom: "12%", right: "12%", transform: "translateY(40px) translateX(-40px)" }}>
+            <motion.div className="absolute z-20" style={{ bottom: "12%", right: "12%", transform: "translateY(40px) translateX(-40px)" }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 1.1 }}>
               <Image src="/images/bubble-blue-dark.png" alt="" width={52} height={52} className="object-contain" />
-            </div>
+            </motion.div>
 
             {/* Femme */}
-            <div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px) translateX(-125px) scale(1.25)" }}>
+            <motion.div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px) translateX(-125px) scale(1.25)" }}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}>
               <Image src="/images/formations-hero-woman.png" alt="Formations Modulor" width={1313} height={1275}
                 className="object-contain" priority />
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

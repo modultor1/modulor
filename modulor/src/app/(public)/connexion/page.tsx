@@ -38,37 +38,63 @@ function ConnexionHero() {
       transition={{ duration: 0.6 }}>
 
       <div className="relative z-10 flex flex-col items-center pt-6 pb-0">
-        <h1 className="text-2xl md:text-3xl font-bold text-primary text-center mb-8">
+        <motion.h1 className="text-2xl md:text-3xl font-bold text-primary text-center mb-8"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}>
           Rejoignez-nous ici
-        </h1>
+        </motion.h1>
 
         <div className="relative w-full flex justify-center items-center" style={{ height: 520 }}>
           {/* Bulles (hors du conteneur maské, donc opaques) */}
           {/* Bulle verte petite — haut gauche (agrandie + rapprochée) */}
-          <Image src="/images/connexion-bubble-green-left.png" alt="" width={90} height={90}
-            className="absolute z-5" style={{ top: "19%", left: "35%", opacity: 1 }} />
+          <motion.div className="absolute z-5" style={{ top: "19%", left: "35%", opacity: 1 }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}>
+            <Image src="/images/connexion-bubble-green-left.png" alt="" width={90} height={90}
+              className="object-contain" />
+          </motion.div>
 
           {/* Bulle bleue grande — haut droite (agrandie + rapprochée) */}
-          <Image src="/images/connexion-bubble-blue-top.png" alt="" width={145} height={145}
-            className="absolute z-5" style={{ top: "7%", right: "28%", opacity: 1 }} />
+          <motion.div className="absolute z-5" style={{ top: "7%", right: "28%", opacity: 1 }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.95 }}>
+            <Image src="/images/connexion-bubble-blue-top.png" alt="" width={145} height={145}
+              className="object-contain" />
+          </motion.div>
 
           {/* Bulle bleue moyenne — bas gauche (agrandie + rapprochée) */}
-          <Image src="/images/connexion-bubble-blue-bottom.png" alt="" width={148} height={148}
-            className="absolute z-5" style={{ bottom: "18%", left: "27%", opacity: 1 }} />
+          <motion.div className="absolute z-5" style={{ bottom: "18%", left: "27%", opacity: 1 }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 1.1 }}>
+            <Image src="/images/connexion-bubble-blue-bottom.png" alt="" width={148} height={148}
+              className="object-contain" />
+          </motion.div>
 
           {/* Bulle verte moyenne — bas droite (agrandie + rapprochée) */}
-          <Image src="/images/connexion-bubble-green-right.png" alt="" width={120} height={120}
-            className="absolute z-5" style={{ bottom: "25%", right: "27%", opacity: 1 }} />
+          <motion.div className="absolute z-5" style={{ bottom: "25%", right: "27%", opacity: 1 }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 1.25 }}>
+            <Image src="/images/connexion-bubble-green-right.png" alt="" width={120} height={120}
+              className="object-contain" />
+          </motion.div>
 
           {/* Image homme — grande, centrée, mask appliqué UNIQUEMENT à l'image */}
-          <div className="relative z-10 flex items-center justify-center">
+          <motion.div className="relative z-10 flex items-center justify-center"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}>
             <Image src="/images/connexion-man.png" alt="Bienvenue" width={750} height={620}
               className="object-contain drop-shadow-lg" priority
               style={{
                 maskImage: "linear-gradient(to bottom, black 45%, transparent 90%)",
                 WebkitMaskImage: "linear-gradient(to bottom, black 45%, transparent 90%)"
               }} />
-          </div>
+          </motion.div>
         </div>
       </div>
     </motion.div>
@@ -146,21 +172,30 @@ function ConnexionForm() {
           )}
 
           <motion.form onSubmit={handleSubmit} className="flex flex-col gap-4"
-            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
-            <FormInput label="Email" type="email" placeholder="votre@email.com"
-              value={email} onChange={setEmail} />
-            <PasswordInput label="Mot de passe"
-              value={password} onChange={setPassword} />
-            <div className="text-right -mt-1">
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
+            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+              <FormInput label="Email" type="email" placeholder="votre@email.com"
+                value={email} onChange={setEmail} />
+            </motion.div>
+            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+              <PasswordInput label="Mot de passe"
+                value={password} onChange={setPassword} />
+            </motion.div>
+            <motion.div className="text-right -mt-1"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
               <Link href="#" className="text-sm text-primary font-semibold hover:underline">
                 Mot de passe oublié ?
               </Link>
-            </div>
-            <button type="submit" disabled={loading}
+            </motion.div>
+            <motion.button type="submit" disabled={loading}
               className="w-full py-4 rounded-xl font-bold text-white text-base mt-1 hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60"
-              style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+              style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
               {loading ? "Connexion..." : "Se connecter"}
-            </button>
+            </motion.button>
           </motion.form>
 
           <motion.p className="text-center text-sm text-muted-foreground"
