@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -86,8 +87,19 @@ export default function InscriptionPage() {
   }
 
   return (
-    <section className="bg-white py-10 sm:py-12 px-4 min-h-[80vh]">
-      <div className="max-w-md mx-auto flex flex-col gap-6">
+    <section style={{
+      background: "linear-gradient(to bottom, #F3F7F5 0%, #E4FEEC 100%)",
+      position: "relative"
+    }} className="py-10 sm:py-12 px-4 min-h-[80vh]">
+      {/* Patterns doodles par-dessus le dégradé */}
+      <div className="absolute inset-0 pointer-events-none z-5 hidden lg:block">
+        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-30" aria-hidden />
+      </div>
+      <div className="absolute inset-0 pointer-events-none z-5 hidden lg:block">
+        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-30 [transform:scaleX(-1)]" aria-hidden />
+      </div>
+
+      <div className="relative z-10 max-w-md mx-auto flex flex-col gap-6">
 
         <div className="text-center">
           <h1 className="text-2xl font-bold text-primary">Inscrivez-vous</h1>
