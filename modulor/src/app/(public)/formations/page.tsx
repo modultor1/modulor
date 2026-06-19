@@ -28,6 +28,16 @@ function Stars({ rating }: { rating: number }) {
 
 /* ─── Hero ──────────────────────────────────────────────────────────── */
 function FormationsHero() {
+  // === CONFIG: MODIFIE ICI SEULEMENT ===
+  const WOMAN = {
+    width: 900,               // Largeur (réduit pour matcher Figma)
+    height: 820,              // Hauteur (proportionnel)
+    marginTop: "-150px",
+    marginRight: "-100px",
+    offsetX: "-100px",            // ← Déplacer DROITE (valeur +) ou GAUCHE (valeur -) SANS changer la taille
+  };
+  // =====================================
+
   return (
     <motion.section className="relative overflow-hidden w-full" style={{ height: "clamp(400px, 40vw, 520px)", minHeight: "480px" }}
       initial={{ opacity: 0, y: 30 }}
@@ -44,7 +54,7 @@ function FormationsHero() {
       </div>
 
       <div className="relative z-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center" style={{ minHeight: "480px" }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           {/* Texte — gauche */}
           <motion.div className="flex flex-col justify-center gap-3 py-10 lg:py-0 text-center lg:text-left" style={{ marginLeft: "25px" }}
             initial="hidden"
@@ -65,7 +75,7 @@ function FormationsHero() {
           </motion.div>
 
           {/* Femme — droite, ancrée en bas */}
-          <div className="relative hidden md:flex justify-center lg:justify-end items-end">
+          <div className="relative hidden md:flex justify-center lg:justify-end items-center" style={{ minHeight: "700px" }}>
             {/* Bulle bleue — haut droite */}
             <motion.div className="absolute z-20" style={{ top: "8%", left: "60%", transform: "translateX(-180%)" }}
               initial={{ opacity: 0, scale: 0.5 }}
@@ -91,11 +101,14 @@ function FormationsHero() {
             </motion.div>
 
             {/* Femme */}
-            <motion.div className="relative z-10 drop-shadow-xl h-full flex items-end" style={{ transform: "translateY(13px) translateX(-125px) scale(1.25)" }}
+            <motion.div className="relative z-10 drop-shadow-xl flex items-center justify-end pr-8"
+              style={{ marginTop: WOMAN.marginTop, marginRight: WOMAN.marginRight }}
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}>
-              <Image src="/images/formations-hero-woman.png" alt="Formations Modulor" width={1313} height={1275}
+              <Image src="/images/formations-hero-woman.png" alt="Formations Modulor"
+                width={WOMAN.width} height={WOMAN.height}
+                style={{ transform: `translateX(${WOMAN.offsetX})` }}
                 className="object-contain" priority />
             </motion.div>
           </div>
