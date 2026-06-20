@@ -85,7 +85,7 @@ function FormationsHero() {
             </motion.div>
 
             {/* Bulle verte petite — centre */}
-            <motion.div className="absolute z-20" style={{ top: "65%", left: "0%" }}
+            <motion.div className="absolute z-20" style={{ top: "45%", left: "10%" }}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.95 }}>
