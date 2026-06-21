@@ -32,9 +32,13 @@ function FormationsHero() {
   const WOMAN = {
     width: 900,               // Largeur (réduit pour matcher Figma)
     height: 820,              // Hauteur (proportionnel)
-    marginTop: "-150px",
-    marginRight: "-100px",
-    offsetX: "-100px",            // ← Déplacer DROITE (valeur +) ou GAUCHE (valeur -) SANS changer la taille
+    marginTop: "-180px",
+    marginRight: "-140px",
+    offsetX: "-200px",            // ← Déplacer DROITE (valeur +) ou GAUCHE (valeur -) SANS changer la taille
+  };
+  const TEXT = {
+    offsetX: "60px",          // ← Bloc texte: DROITE (+) / GAUCHE (-)
+    offsetY: "100px",           // ← Bloc texte: BAS (+) / HAUT (-)
   };
   // =====================================
 
@@ -56,7 +60,7 @@ function FormationsHero() {
       <div className="relative z-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           {/* Texte — gauche */}
-          <motion.div className="flex flex-col justify-center gap-3 py-10 lg:py-0 text-center lg:text-left" style={{ marginLeft: "25px" }}
+          <motion.div className="flex flex-col justify-center gap-3 py-10 lg:py-0 text-center lg:text-left" style={{ transform: `translate(${TEXT.offsetX}, ${TEXT.offsetY})` }}
             initial="hidden"
             animate="visible"
             variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } } }}>
@@ -85,7 +89,7 @@ function FormationsHero() {
             </motion.div>
 
             {/* Bulle verte petite — centre */}
-            <motion.div className="absolute z-20" style={{ top: "45%", left: "10%" }}
+            <motion.div className="absolute z-20" style={{ top: "45%", left: "-3%" }}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.95 }}>
@@ -93,7 +97,7 @@ function FormationsHero() {
             </motion.div>
 
             {/* Bulle bleue foncée — bas droite */}
-            <motion.div className="absolute z-20" style={{ bottom: "12%", right: "12%", transform: "translateY(40px) translateX(-40px)" }}
+            <motion.div className="absolute z-20" style={{ bottom: "38%", right: "26%", transform: "translateY(0px) translateX(0px)" }}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 1.1 }}>
