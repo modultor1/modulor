@@ -88,6 +88,14 @@ function FormationsHero() {
               <Image src="/images/bubble-blue-light.png" alt="" width={100} height={125} className="object-contain" />
             </motion.div>
 
+            {/* 2em Bulle bleue — haut droite */}
+            <motion.div className="absolute z-20" style={{ top: "8%", right: "-95px", width: "150px" }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.8 }}>
+              <Image src="/images/bubble-blue-light.png" alt="" width={150} height={200} className="object-contain" />
+            </motion.div>
+
             {/* Bulle verte petite — centre */}
             <motion.div className="absolute z-20" style={{ top: "45%", left: "-3%" }}
               initial={{ opacity: 0, scale: 0.5 }}
