@@ -81,7 +81,7 @@ function FormationsHero() {
           {/* Femme — droite, ancrée en bas */}
           <div className="relative hidden md:flex justify-center lg:justify-end items-center" style={{ minHeight: "700px" }}>
             {/* Bulle bleue — haut droite */}
-            <motion.div className="absolute z-20" style={{ top: "8%", left: "60%", transform: "translateX(-180%)" }}
+            <motion.div className="absolute z-20" style={{ top: "8%", left: "25%", transform: "translateX(-180%)" }}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.8 }}>
