@@ -43,7 +43,7 @@ function FormationsHero() {
   // =====================================
 
   return (
-    <motion.section className="relative overflow-hidden w-full" style={{ height: "clamp(400px, 40vw, 520px)", minHeight: "480px" }}
+    <motion.section className="relative overflow-hidden w-full min-h-[480px] lg:[height:clamp(400px,40vw,520px)]"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}>
@@ -79,9 +79,9 @@ function FormationsHero() {
           </motion.div>
 
           {/* Femme — droite, ancrée en bas */}
-          <div className="relative hidden md:flex justify-center lg:justify-end items-center" style={{ minHeight: "700px" }}>
+          <div className="relative flex justify-center lg:justify-end items-center min-h-[320px] lg:min-h-[700px]">
             {/* Bulle bleue — haut droite */}
-            <motion.div className="absolute z-20" style={{ top: "8%", left: "25%", transform: "translateX(-180%)" }}
+            <motion.div className="absolute z-20 hidden lg:block" style={{ top: "8%", left: "25%", transform: "translateX(-180%)" }}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.8 }}>
@@ -89,7 +89,7 @@ function FormationsHero() {
             </motion.div>
 
             {/* 2em Bulle bleue — haut droite */}
-            <motion.div className="absolute z-20" style={{ top: "8%", right: "-95px", width: "150px" }}
+            <motion.div className="absolute z-20 hidden lg:block" style={{ top: "8%", right: "-95px", width: "150px" }}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.8 }}>
@@ -97,7 +97,7 @@ function FormationsHero() {
             </motion.div>
 
             {/* Bulle verte petite — centre */}
-            <motion.div className="absolute z-20" style={{ top: "45%", left: "-3%" }}
+            <motion.div className="absolute z-20 hidden lg:block" style={{ top: "45%", left: "-3%" }}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.95 }}>
@@ -105,7 +105,7 @@ function FormationsHero() {
             </motion.div>
 
             {/* Bulle bleue foncée — bas droite */}
-            <motion.div className="absolute z-20" style={{ bottom: "38%", right: "26%", transform: "translateY(0px) translateX(0px)" }}
+            <motion.div className="absolute z-20 hidden lg:block" style={{ bottom: "38%", right: "26%", transform: "translateY(0px) translateX(0px)" }}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 1.1 }}>
@@ -113,15 +113,15 @@ function FormationsHero() {
             </motion.div>
 
             {/* Femme */}
-            <motion.div className="relative z-10 drop-shadow-xl flex items-center justify-end pr-8"
-              style={{ marginTop: WOMAN.marginTop, marginRight: WOMAN.marginRight }}
+            <motion.div className="relative z-10 drop-shadow-xl flex items-center justify-center lg:justify-end lg:pr-8 lg:[margin-top:var(--mt)] lg:[margin-right:var(--mr)]"
+              style={{ "--mt": WOMAN.marginTop, "--mr": WOMAN.marginRight } as React.CSSProperties}
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}>
               <Image src="/images/formations-hero-woman.png" alt="Formations Modulor"
                 width={WOMAN.width} height={WOMAN.height}
-                style={{ transform: `translateX(${WOMAN.offsetX})` }}
-                className="object-contain" priority />
+                style={{ "--wox": WOMAN.offsetX } as React.CSSProperties}
+                className="object-contain max-h-[300px] w-auto lg:max-h-none lg:[transform:translateX(var(--wox))]" priority />
             </motion.div>
           </div>
         </div>
