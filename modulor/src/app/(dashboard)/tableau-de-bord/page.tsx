@@ -9,6 +9,7 @@ import {
   Bell, Settings, Clock, CheckCircle2, Menu, X, ChevronRight,
   BookOpen, Activity, Wallet, Zap, Lock, LayoutDashboard, FileText,
   Loader2, AlertCircle,
+  PlayCircle, Compass, Heart, ShoppingCart, User, MessageCircle,
   type LucideIcon,
 } from "lucide-react";
 
@@ -475,6 +476,54 @@ function ActivitesContent({ enrollments, notifications }: {
   );
 }
 
+/* ─── Actions rapides ───────────────────────────────────────────────── */
+function ActionsContent({ enrollments }: { enrollments: Enrollment[] }) {
+  const lastActive = enrollments.find((e) => !e.terminee);
+  const continueHref = lastActive ? `/formations/${lastActive.formation_id}/cours` : "/formations";
+
+  const actions: { label: string; desc: string; Icon: LucideIcon; href: string; color: string }[] = [
+    { label: lastActive ? "Reprendre le cours" : "Commencer à apprendre", desc: lastActive ? lastActive.titre : "Découvrez nos formations", Icon: PlayCircle,   href: continueHref,   color: "#2934f2" },
+    { label: "Explorer les formations", desc: "Parcourir le catalogue",        Icon: Compass,      href: "/formations",   color: "#57f27d" },
+    { label: "Mes favoris",             desc: "Formations enregistrées",       Icon: Heart,        href: "/mes-favoris",  color: "#ef4444" },
+    { label: "Mon panier",              desc: "Finaliser un achat",            Icon: ShoppingCart, href: "/panier",       color: "#f59e0b" },
+    { label: "Mon portefeuille",        desc: "Solde et transactions",         Icon: Wallet,       href: "/portefeuille", color: "#8b5cf6" },
+    { label: "Mon profil",              desc: "Modifier mes informations",     Icon: User,         href: "/profil",       color: "#2934f2" },
+    { label: "Contacter le support",    desc: "Besoin d'aide ?",               Icon: MessageCircle,href: "/contact",      color: "#57f27d" },
+  ];
+
+  return (
+    <motion.div className="flex flex-col gap-4"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}>
+      <h3 className="text-sm font-bold text-primary">Actions rapides</h3>
+      <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={{ visible: { transition: { staggerChildren: 0.08 } } }}>
+        {actions.map((a) => (
+          <motion.div key={a.label}
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}>
+            <Link href={a.href}
+              className="group flex items-center gap-3 rounded-2xl border border-border bg-white/80 hover:bg-white hover:shadow-md hover:border-primary/30 transition-all p-4 h-full">
+              <span className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${a.color}1a` }}>
+                <a.Icon size={20} style={{ color: a.color }} />
+              </span>
+              <span className="flex flex-col min-w-0 flex-1">
+                <span className="text-sm font-bold text-foreground truncate">{a.label}</span>
+                <span className="text-xs text-muted-foreground truncate">{a.desc}</span>
+              </span>
+              <ChevronRight size={16} className="text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
+            </Link>
+          </motion.div>
+        ))}
+      </motion.div>
+    </motion.div>
+  );
+}
+
 /* ─── Page principale ───────────────────────────────────────────────── */
 export default function TableauDeBordPage() {
   const [activeTab,      setActiveTab]      = useState("tableau");
@@ -673,7 +722,10 @@ export default function TableauDeBordPage() {
                   {activeSection === "activites" && (
                     <ActivitesContent enrollments={enrollments} notifications={notifications} />
                   )}
-                  {(activeSection === "actions" || activeSection === "acces") && (
+                  {activeSection === "actions" && (
+                    <ActionsContent enrollments={enrollments} />
+                  )}
+                  {activeSection === "acces" && (
                     <div className="rounded-2xl border border-border bg-white/80 p-8 text-center flex flex-col items-center gap-3">
                       <AlertCircle size={32} className="text-muted-foreground" />
                       <p className="text-sm text-muted-foreground font-medium">Section à venir prochainement</p>
