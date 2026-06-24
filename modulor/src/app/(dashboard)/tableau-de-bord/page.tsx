@@ -595,8 +595,7 @@ export default function TableauDeBordPage() {
 
       <DashboardTabs active={activeTab} onChange={setActiveTab} />
 
-      <div className="relative overflow-hidden">
-        <Image src="/images/db-bg-content.png" alt="" fill className="object-cover" aria-hidden />
+      <div className="relative overflow-hidden" style={{ background: "linear-gradient(180deg, #EAF7EF 0%, #FFFFFF 28%)" }}>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
 
