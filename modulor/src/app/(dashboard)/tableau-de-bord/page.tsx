@@ -7,7 +7,7 @@ import { motion } from "motion/react";
 import { createClient } from "@/lib/supabase/client";
 import {
   Bell, Settings, Clock, CheckCircle2, Menu, X, ChevronRight,
-  BookOpen, Activity, Wallet, Zap, Lock, LayoutDashboard, FileText,
+  GraduationCap, Activity, Wallet, Zap, KeyRound, LayoutDashboard, FileText,
   Loader2, AlertCircle,
   PlayCircle, Compass, Heart, ShoppingCart, User, MessageCircle,
   type LucideIcon,
@@ -37,11 +37,11 @@ interface Notification {
 
 /* ─── Sidebar ────────────────────────────────────────────────────────── */
 const SIDEBAR: { id: string; label: string; Icon: LucideIcon; href: string | null }[] = [
-  { id: "formations",   label: "Formations",   Icon: BookOpen, href: null            },
-  { id: "activites",    label: "Activités",    Icon: Activity, href: null            },
-  { id: "portefeuille", label: "Portefeuille", Icon: Wallet,   href: "/portefeuille" },
-  { id: "actions",      label: "Actions",      Icon: Zap,      href: null            },
-  { id: "acces",        label: "Accès",        Icon: Lock,     href: null            },
+  { id: "formations",   label: "Formations",   Icon: GraduationCap, href: null            },
+  { id: "activites",    label: "Activités",    Icon: Activity,      href: null            },
+  { id: "portefeuille", label: "Portefeuille", Icon: Wallet,        href: "/portefeuille" },
+  { id: "actions",      label: "Actions",      Icon: Zap,           href: null            },
+  { id: "acces",        label: "Accès",        Icon: KeyRound,      href: null            },
 ];
 
 /* ─── Barre de progression Tailwind ─────────────────────────────────── */
