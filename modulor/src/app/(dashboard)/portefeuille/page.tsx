@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   ChevronRight, Menu, X, Bell, Settings, Clock,
-  BookOpen, Activity, Wallet, Zap, Lock, LayoutDashboard, FileText,
+  GraduationCap, Activity, Wallet, Zap, KeyRound, LayoutDashboard, FileText,
   Loader2, CheckCircle2, XCircle, AlertCircle,
   type LucideIcon,
 } from "lucide-react";
@@ -29,11 +29,11 @@ interface Transaction {
 
 /* ─── Sidebar ────────────────────────────────────────────────────────── */
 const SIDEBAR: { id: string; label: string; Icon: LucideIcon; href: string }[] = [
-  { id: "formations",   label: "Formations",   Icon: BookOpen, href: "/tableau-de-bord" },
-  { id: "activites",    label: "Activités",    Icon: Activity, href: "/tableau-de-bord" },
-  { id: "portefeuille", label: "Portefeuille", Icon: Wallet,   href: "/portefeuille"    },
-  { id: "actions",      label: "Actions",      Icon: Zap,      href: "/tableau-de-bord" },
-  { id: "acces",        label: "Accès",        Icon: Lock,     href: "/tableau-de-bord" },
+  { id: "formations",   label: "Formations",   Icon: GraduationCap, href: "/tableau-de-bord" },
+  { id: "activites",    label: "Activités",    Icon: Activity,      href: "/tableau-de-bord" },
+  { id: "portefeuille", label: "Portefeuille", Icon: Wallet,        href: "/portefeuille"    },
+  { id: "actions",      label: "Actions",      Icon: Zap,           href: "/tableau-de-bord" },
+  { id: "acces",        label: "Accès",        Icon: KeyRound,      href: "/tableau-de-bord" },
 ];
 
 const SOLDE_CARDS = [
@@ -260,8 +260,7 @@ export default function PortefeuillePage() {
       <DashboardHero userName={userName} userRole={userRole} />
       <DashboardTabs />
 
-      <div className="relative overflow-hidden">
-        <Image src="/images/db-bg-content.png" alt="" fill className="object-cover" aria-hidden />
+      <div className="relative overflow-hidden" style={{ background: "linear-gradient(180deg, #EAF7EF 0%, #FFFFFF 28%)" }}>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
 
