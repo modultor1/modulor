@@ -10,6 +10,7 @@ import {
   GraduationCap, Activity, Wallet, Zap, KeyRound, LayoutDashboard, FileText,
   Loader2, AlertCircle,
   PlayCircle, Compass, Heart, ShoppingCart, User, MessageCircle,
+  Mail, ShieldCheck, LogOut, Eye, EyeOff,
   type LucideIcon,
 } from "lucide-react";
 
@@ -524,6 +525,141 @@ function ActionsContent({ enrollments }: { enrollments: Enrollment[] }) {
   );
 }
 
+/* ─── Accès : sécurité du compte ────────────────────────────────────── */
+function AccesContent({ userEmail }: { userEmail: string }) {
+  const [supabase] = useState(() => createClient());
+
+  const [pwd,  setPwd]  = useState("");
+  const [pwd2, setPwd2] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
+  const [pwdMsg, setPwdMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [pwdLoading, setPwdLoading] = useState(false);
+
+  const [email, setEmail] = useState(userEmail);
+  const [emailMsg, setEmailMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [emailLoading, setEmailLoading] = useState(false);
+
+  const [signoutLoading, setSignoutLoading] = useState(false);
+
+  useEffect(() => { setEmail(userEmail); }, [userEmail]);
+
+  async function changePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setPwdMsg(null);
+    if (pwd.length < 6) { setPwdMsg({ ok: false, text: "6 caractères minimum." }); return; }
+    if (pwd !== pwd2)   { setPwdMsg({ ok: false, text: "Les mots de passe ne correspondent pas." }); return; }
+    setPwdLoading(true);
+    const { error } = await supabase.auth.updateUser({ password: pwd });
+    setPwdLoading(false);
+    if (error) { setPwdMsg({ ok: false, text: error.message }); return; }
+    setPwd(""); setPwd2("");
+    setPwdMsg({ ok: true, text: "Mot de passe mis à jour avec succès." });
+  }
+
+  async function changeEmail(e: React.FormEvent) {
+    e.preventDefault();
+    setEmailMsg(null);
+    if (!email.trim() || email.trim() === userEmail) {
+      setEmailMsg({ ok: false, text: "Entrez une nouvelle adresse différente." }); return;
+    }
+    setEmailLoading(true);
+    const { error } = await supabase.auth.updateUser({ email: email.trim() });
+    setEmailLoading(false);
+    if (error) { setEmailMsg({ ok: false, text: error.message }); return; }
+    setEmailMsg({ ok: true, text: "Email de confirmation envoyé. Vérifiez votre nouvelle adresse." });
+  }
+
+  async function signOutEverywhere() {
+    setSignoutLoading(true);
+    await supabase.auth.signOut({ scope: "global" });
+    window.location.href = "/connexion";
+  }
+
+  const inputCls = "w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30";
+  const Msg = ({ m }: { m: { ok: boolean; text: string } | null }) =>
+    m ? (
+      <p className={`flex items-center gap-1.5 text-xs font-medium ${m.ok ? "text-green-600" : "text-red-500"}`}>
+        {m.ok ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />} {m.text}
+      </p>
+    ) : null;
+
+  return (
+    <motion.div className="flex flex-col gap-4"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}>
+      <h3 className="text-sm font-bold text-primary">Sécurité du compte</h3>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Mot de passe */}
+        <form onSubmit={changePassword} className="rounded-2xl border border-border bg-white/80 p-5 flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#2934f21a" }}>
+              <KeyRound size={18} style={{ color: "#2934f2" }} />
+            </span>
+            <span className="text-sm font-bold text-foreground">Mot de passe</span>
+          </div>
+          <div className="relative">
+            <input type={showPwd ? "text" : "password"} value={pwd} onChange={(e) => setPwd(e.target.value)}
+              placeholder="Nouveau mot de passe" className={inputCls} autoComplete="new-password" />
+            <button type="button" onClick={() => setShowPwd(!showPwd)} aria-label="Afficher/masquer"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+              {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+          <input type={showPwd ? "text" : "password"} value={pwd2} onChange={(e) => setPwd2(e.target.value)}
+            placeholder="Confirmer le mot de passe" className={inputCls} autoComplete="new-password" />
+          <Msg m={pwdMsg} />
+          <button type="submit" disabled={pwdLoading}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity disabled:opacity-60 w-fit cursor-pointer"
+            style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+            {pwdLoading ? <Loader2 size={14} className="animate-spin" /> : <KeyRound size={14} />}
+            Mettre à jour
+          </button>
+        </form>
+
+        {/* Email */}
+        <form onSubmit={changeEmail} className="rounded-2xl border border-border bg-white/80 p-5 flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#21d34c1a" }}>
+              <Mail size={18} style={{ color: "#1fae4b" }} />
+            </span>
+            <span className="text-sm font-bold text-foreground">Adresse email</span>
+          </div>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+            placeholder="nouvel@email.com" className={inputCls} autoComplete="email" />
+          <Msg m={emailMsg} />
+          <button type="submit" disabled={emailLoading}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity disabled:opacity-60 w-fit cursor-pointer"
+            style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
+            {emailLoading ? <Loader2 size={14} className="animate-spin" /> : <Mail size={14} />}
+            Changer l&apos;email
+          </button>
+        </form>
+      </div>
+
+      {/* Sessions & déconnexion */}
+      <div className="rounded-2xl border border-border bg-white/80 p-5 flex flex-col gap-3">
+        <div className="flex items-center gap-2">
+          <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#ef44441a" }}>
+            <ShieldCheck size={18} style={{ color: "#ef4444" }} />
+          </span>
+          <span className="text-sm font-bold text-foreground">Sessions &amp; déconnexion</span>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Déconnecte ta session de tous les appareils. Utile si tu t&apos;es connecté sur un appareil partagé.
+        </p>
+        <button onClick={signOutEverywhere} disabled={signoutLoading}
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm border-2 border-red-400 text-red-500 hover:bg-red-50 transition-colors disabled:opacity-60 w-fit cursor-pointer">
+          {signoutLoading ? <Loader2 size={14} className="animate-spin" /> : <LogOut size={14} />}
+          Se déconnecter partout
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
 /* ─── Page principale ───────────────────────────────────────────────── */
 export default function TableauDeBordPage() {
   const [activeTab,      setActiveTab]      = useState("tableau");
@@ -734,10 +870,7 @@ export default function TableauDeBordPage() {
                     <ActionsContent enrollments={enrollments} />
                   )}
                   {activeSection === "acces" && (
-                    <div className="rounded-2xl border border-border bg-white/80 p-8 text-center flex flex-col items-center gap-3">
-                      <AlertCircle size={32} className="text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground font-medium">Section à venir prochainement</p>
-                    </div>
+                    <AccesContent userEmail={userEmail} />
                   )}
                 </>
               )}
