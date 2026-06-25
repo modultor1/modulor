@@ -2,49 +2,70 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Mail, Phone, MapPin, Send, Clock, CheckCircle2 } from "lucide-react";
+import { motion } from "motion/react";
+import { Mail, Phone, MapPin, Send, Clock, CheckCircle2, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 /* ─── Hero ──────────────────────────────────────────────────────────── */
 function ContactHero() {
   return (
-    <section className="relative overflow-hidden w-full" style={{ minHeight: 260 }}>
-      <Image src="/images/formations-bg-hero.png" alt="" fill className="object-cover" aria-hidden />
+    <motion.section className="relative overflow-hidden w-full" style={{ minHeight: 280 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
+      <Image src="/images/bg-hero.png" alt="" fill className="object-cover" aria-hidden priority />
       <div className="absolute inset-0 pointer-events-none">
-        <Image src="/images/formations-pattern.png" alt="" fill className="object-cover opacity-40" aria-hidden />
+        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-40" aria-hidden />
       </div>
 
       {/* Bulles décoratives */}
-      <div className="animate-bounce absolute top-6 right-[12%] z-10" style={{ animationDuration: "3.5s" }}>
-        <Image src="/images/bubble-blue-dark.png" alt="" width={60} height={60} />
-      </div>
-      <div className="animate-bounce absolute bottom-8 left-[8%] z-10" style={{ animationDuration: "4s", animationDelay: "0.5s" }}>
-        <Image src="/images/bubble-green.png" alt="" width={50} height={50} />
-      </div>
+      <motion.div className="absolute top-8 right-[12%] z-10 pointer-events-none"
+        initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.8 }}>
+      </motion.div>
+      <motion.div className="absolute bottom-10 left-[8%] z-10 pointer-events-none"
+        initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.95 }}>
+      </motion.div>
+      <motion.div className="absolute top-10 left-[22%] z-10 pointer-events-none hidden sm:block"
+        initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 1.1 }}>
+      </motion.div>
 
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center h-full py-14 sm:py-16 gap-3">
-        <p className="text-foreground font-bold text-sm sm:text-base">Une question ?</p>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary leading-tight">
+      <motion.div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center h-full py-14 sm:py-16 gap-3"
+        initial="hidden" animate="visible"
+        variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } } }}>
+        <motion.p style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 600, color: "#03251C" }} className="text-sm sm:text-base"
+          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+          Une question ?
+        </motion.p>
+        <motion.h1 style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 700, fontSize: "clamp(34px, 7vw, 60px)", color: "#2934F2" }} className="leading-tight"
+          variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}>
           Contactez-nous
-        </h1>
-        <p className="text-accent font-bold text-sm sm:text-base max-w-sm leading-snug">
+        </motion.h1>
+        <motion.p style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 500, color: "#21D34C" }} className="text-sm sm:text-base max-w-sm leading-snug"
+          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
           Notre équipe vous répond dans les plus brefs délais
-        </p>
-      </div>
-    </section>
+        </motion.p>
+      </motion.div>
+    </motion.section>
   );
 }
 
 /* ─── Carte info ─────────────────────────────────────────────────────── */
+const INFOS: { Icon: React.ElementType; title: string; lines: string[]; color: string }[] = [
+  { Icon: Mail,   color: "#2934f2", title: "Email",     lines: ["modulororg@gmail.com", "support@modulor.bj"] },
+  { Icon: Phone,  color: "#57f27d", title: "Téléphone", lines: ["+229 01 XX XX XX XX", "WhatsApp disponible"] },
+  { Icon: MapPin, color: "#ef4444", title: "Adresse",   lines: ["Cotonou, Bénin", "Quartier Cadjehoun"] },
+  { Icon: Clock,  color: "#f59e0b", title: "Horaires",  lines: ["Lun – Ven : 8h00 – 18h00", "Sam : 9h00 – 13h00"] },
+];
+
 function InfoCard({ Icon, title, lines, color }: {
   Icon: React.ElementType; title: string; lines: string[]; color: string;
 }) {
   return (
-    <div className="relative rounded-2xl overflow-hidden p-5 flex items-start gap-4">
+    <div className="relative rounded-2xl overflow-hidden p-5 flex items-start gap-4 hover:shadow-md transition-shadow">
       <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
       <div className="relative z-10 flex items-start gap-4">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-          style={{ background: color + "20" }}>
+          style={{ background: color + "1a" }}>
           <Icon size={20} style={{ color }} />
         </div>
         <div className="flex flex-col gap-1">
@@ -92,7 +113,8 @@ function ContactForm() {
 
   if (sent) {
     return (
-      <div className="flex flex-col items-center gap-4 py-12 text-center">
+      <motion.div className="flex flex-col items-center gap-4 py-12 text-center"
+        initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
         <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center">
           <CheckCircle2 size={32} className="text-accent" />
         </div>
@@ -101,10 +123,10 @@ function ContactForm() {
           Merci pour votre message. Notre équipe vous répondra dans les 24 heures.
         </p>
         <button onClick={() => setSent(false)}
-          className="mt-2 text-sm text-primary font-bold hover:underline">
+          className="mt-2 text-sm text-primary font-bold hover:underline cursor-pointer">
           Envoyer un autre message
         </button>
-      </div>
+      </motion.div>
     );
   }
 
@@ -150,7 +172,7 @@ function ContactForm() {
       )}
 
       <button type="submit" disabled={loading}
-        className="w-full sm:w-fit py-3.5 px-8 rounded-xl font-bold text-white text-sm hover:opacity-90 transition-opacity disabled:opacity-60 flex items-center gap-2 justify-center"
+        className="w-full sm:w-fit py-3 px-7 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity disabled:opacity-60 flex items-center gap-2 justify-center cursor-pointer"
         style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
         <Send size={16} />
         {loading ? "Envoi en cours..." : "Envoyer le message"}
@@ -158,6 +180,16 @@ function ContactForm() {
     </form>
   );
 }
+
+/* ─── FAQ ────────────────────────────────────────────────────────────── */
+const FAQ = [
+  { q: "Comment m'inscrire à une formation ?", r: "Créez votre compte, parcourez le catalogue et cliquez sur « Acheter maintenant » sur la formation de votre choix." },
+  { q: "Quels moyens de paiement acceptez-vous ?", r: "Nous acceptons Mobile Money (MTN MoMo, Moov), les cartes VISA et Mastercard via FedaPay." },
+  { q: "Puis-je accéder à mes formations hors ligne ?", r: "Les formations sont accessibles en ligne sur tous vos appareils. Le téléchargement hors ligne arrive bientôt." },
+  { q: "Comment obtenir mon certificat ?", r: "Après avoir complété 100% d'une formation, votre certificat est généré automatiquement dans votre espace." },
+  { q: "Puis-je devenir formateur sur Modulor ?", r: "Oui ! Contactez-nous via ce formulaire avec le sujet « Devenir formateur » et nous reviendrons vers vous." },
+  { q: "Y a-t-il une période d'essai ?", r: "Certaines formations proposent du contenu gratuit en aperçu. Rendez-vous sur la page de la formation pour découvrir." },
+];
 
 /* ─── Page ──────────────────────────────────────────────────────────── */
 export default function ContactPage() {
@@ -169,7 +201,11 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
 
           {/* Infos de contact */}
-          <div className="flex flex-col gap-5">
+          <motion.div className="flex flex-col gap-5"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}>
             <div>
               <h2 className="text-xl font-bold text-primary mb-1">Nos coordonnées</h2>
               <p className="text-sm text-muted-foreground">
@@ -177,25 +213,26 @@ export default function ContactPage() {
               </p>
             </div>
 
-            <InfoCard Icon={Mail}    color="#2934f2"
-              title="Email"
-              lines={["modulororg@gmail.com", "support@modulor.bj"]} />
-
-            <InfoCard Icon={Phone}   color="#57f27d"
-              title="Téléphone"
-              lines={["+229 01 XX XX XX XX", "WhatsApp disponible"]} />
-
-            <InfoCard Icon={MapPin}  color="#ef4444"
-              title="Adresse"
-              lines={["Cotonou, Bénin", "Quartier Cadjehoun"]} />
-
-            <InfoCard Icon={Clock}   color="#f59e0b"
-              title="Horaires"
-              lines={["Lun – Ven : 8h00 – 18h00", "Sam : 9h00 – 13h00"]} />
-          </div>
+            <motion.div className="flex flex-col gap-5"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
+              {INFOS.map((info) => (
+                <motion.div key={info.title}
+                  variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+                  <InfoCard {...info} />
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
 
           {/* Formulaire */}
-          <div className="lg:col-span-2">
+          <motion.div className="lg:col-span-2"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.1 }}>
             <div className="relative rounded-2xl overflow-hidden p-6 sm:p-8">
               <Image src="/images/db-card-active.png" alt="" fill className="object-cover" aria-hidden />
               <div className="relative z-10">
@@ -206,7 +243,7 @@ export default function ContactPage() {
                 <ContactForm />
               </div>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>
@@ -215,21 +252,22 @@ export default function ContactPage() {
       <section className="py-10 sm:py-12 px-4 sm:px-6 lg:px-8 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-xl font-bold text-primary mb-6 text-center">Questions fréquentes</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { q: "Comment m'inscrire à une formation ?", r: "Créez votre compte, parcourez le catalogue et cliquez sur « Acheter maintenant » sur la formation de votre choix." },
-              { q: "Quels moyens de paiement acceptez-vous ?", r: "Nous acceptons Mobile Money (MTN MoMo, Moov), les cartes VISA et Mastercard via FedaPay." },
-              { q: "Puis-je accéder à mes formations hors ligne ?", r: "Les formations sont accessibles en ligne sur tous vos appareils. Le téléchargement hors ligne arrive bientôt." },
-              { q: "Comment obtenir mon certificat ?", r: "Après avoir complété 100% d'une formation, votre certificat est généré automatiquement dans votre espace." },
-              { q: "Puis-je devenir formateur sur Modulor ?", r: "Oui ! Contactez-nous via ce formulaire avec le sujet « Devenir formateur » et nous reviendrons vers vous." },
-              { q: "Y a-t-il une période d'essai ?", r: "Certaines formations proposent du contenu gratuit en aperçu. Rendez-vous sur la page de la formation pour découvrir." },
-            ].map((item, i) => (
-              <div key={i} className="rounded-2xl border border-border bg-white p-4 flex flex-col gap-2">
-                <p className="text-sm font-bold text-primary">{item.q}</p>
-                <p className="text-xs text-muted-foreground leading-relaxed">{item.r}</p>
-              </div>
+          <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={{ visible: { transition: { staggerChildren: 0.08 } } }}>
+            {FAQ.map((item, i) => (
+              <motion.div key={i} className="rounded-2xl border border-border bg-white p-4 flex flex-col gap-2 hover:shadow-md hover:border-primary/30 transition-all"
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}>
+                <p className="text-sm font-bold text-primary flex items-start gap-1.5">
+                  <ChevronRight size={15} className="text-accent shrink-0 mt-0.5" />
+                  {item.q}
+                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed pl-[22px]">{item.r}</p>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
     </>
