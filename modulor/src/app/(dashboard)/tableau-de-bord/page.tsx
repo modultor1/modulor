@@ -415,14 +415,11 @@ function DetailsTab({ userName, userEmail, userRole, enrollments }: {
 }
 
 /* ─── Activités ─────────────────────────────────────────────────────── */
-function ActivitesContent({ enrollments, notifications }: {
-  enrollments: Enrollment[];
-  notifications: Notification[];
+function ActiviteSection({ title, color, items }: {
+  title: string; color: string;
+  items: { texte: string; date: string }[];
 }) {
-  const Section = ({ title, color, items }: {
-    title: string; color: string;
-    items: { texte: string; date: string }[];
-  }) => (
+  return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <span className="text-sm font-bold flex items-center gap-2">
@@ -448,7 +445,12 @@ function ActivitesContent({ enrollments, notifications }: {
       </div>
     </div>
   );
+}
 
+function ActivitesContent({ enrollments, notifications }: {
+  enrollments: Enrollment[];
+  notifications: Notification[];
+}) {
   const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString("fr-FR", {
       day: "2-digit", month: "2-digit", year: "numeric",
@@ -471,8 +473,8 @@ function ActivitesContent({ enrollments, notifications }: {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6 }}>
-      <Section title="Dernières activités"    color="#57f27d" items={activites}  />
-      <Section title="Notifications récentes" color="#f59e0b" items={notifItems} />
+      <ActiviteSection title="Dernières activités"    color="#57f27d" items={activites}  />
+      <ActiviteSection title="Notifications récentes" color="#f59e0b" items={notifItems} />
     </motion.div>
   );
 }
@@ -526,6 +528,16 @@ function ActionsContent({ enrollments }: { enrollments: Enrollment[] }) {
 }
 
 /* ─── Accès : sécurité du compte ────────────────────────────────────── */
+type FieldMsgData = { ok: boolean; text: string } | null;
+function FieldMsg({ m }: { m: FieldMsgData }) {
+  if (!m) return null;
+  return (
+    <p className={`flex items-center gap-1.5 text-xs font-medium ${m.ok ? "text-green-600" : "text-red-500"}`}>
+      {m.ok ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />} {m.text}
+    </p>
+  );
+}
+
 function AccesContent({ userEmail }: { userEmail: string }) {
   const [supabase] = useState(() => createClient());
 
@@ -535,13 +547,14 @@ function AccesContent({ userEmail }: { userEmail: string }) {
   const [pwdMsg, setPwdMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [pwdLoading, setPwdLoading] = useState(false);
 
-  const [email, setEmail] = useState(userEmail);
+  const [emailInput, setEmailInput] = useState<string | null>(null);
   const [emailMsg, setEmailMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [emailLoading, setEmailLoading] = useState(false);
 
   const [signoutLoading, setSignoutLoading] = useState(false);
 
-  useEffect(() => { setEmail(userEmail); }, [userEmail]);
+  // Valeur affichée : ce que l'utilisateur a tapé, sinon l'email courant du prop.
+  const email = emailInput ?? userEmail;
 
   async function changePassword(e: React.FormEvent) {
     e.preventDefault();
@@ -576,12 +589,6 @@ function AccesContent({ userEmail }: { userEmail: string }) {
   }
 
   const inputCls = "w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30";
-  const Msg = ({ m }: { m: { ok: boolean; text: string } | null }) =>
-    m ? (
-      <p className={`flex items-center gap-1.5 text-xs font-medium ${m.ok ? "text-green-600" : "text-red-500"}`}>
-        {m.ok ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />} {m.text}
-      </p>
-    ) : null;
 
   return (
     <motion.div className="flex flex-col gap-4"
@@ -610,7 +617,7 @@ function AccesContent({ userEmail }: { userEmail: string }) {
           </div>
           <input type={showPwd ? "text" : "password"} value={pwd2} onChange={(e) => setPwd2(e.target.value)}
             placeholder="Confirmer le mot de passe" className={inputCls} autoComplete="new-password" />
-          <Msg m={pwdMsg} />
+          <FieldMsg m={pwdMsg} />
           <button type="submit" disabled={pwdLoading}
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity disabled:opacity-60 w-fit cursor-pointer"
             style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
@@ -627,9 +634,9 @@ function AccesContent({ userEmail }: { userEmail: string }) {
             </span>
             <span className="text-sm font-bold text-foreground">Adresse email</span>
           </div>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+          <input type="email" value={email} onChange={(e) => setEmailInput(e.target.value)}
             placeholder="nouvel@email.com" className={inputCls} autoComplete="email" />
-          <Msg m={emailMsg} />
+          <FieldMsg m={emailMsg} />
           <button type="submit" disabled={emailLoading}
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity disabled:opacity-60 w-fit cursor-pointer"
             style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
@@ -681,6 +688,8 @@ export default function TableauDeBordPage() {
   useEffect(() => {
     const s = new URLSearchParams(window.location.search).get("section");
     if (s && ["formations", "activites", "actions", "acces"].includes(s)) {
+      // Lecture d'une valeur navigateur (URL) au montage : l'effet évite un mismatch d'hydratation SSR.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveSection(s);
     }
   }, []);
@@ -731,6 +740,7 @@ export default function TableauDeBordPage() {
       // Clean up old channel if exists
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((channelRef as any).current) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         supabase.removeChannel((channelRef as any).current);
       }
 
@@ -754,6 +764,7 @@ export default function TableauDeBordPage() {
       const supabase = createClient();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((channelRef as any).current) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         supabase.removeChannel((channelRef as any).current);
       }
     };
