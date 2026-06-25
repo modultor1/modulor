@@ -29,11 +29,11 @@ interface Transaction {
 
 /* ─── Sidebar ────────────────────────────────────────────────────────── */
 const SIDEBAR: { id: string; label: string; Icon: LucideIcon; href: string }[] = [
-  { id: "formations",   label: "Formations",   Icon: GraduationCap, href: "/tableau-de-bord" },
-  { id: "activites",    label: "Activités",    Icon: Activity,      href: "/tableau-de-bord" },
-  { id: "portefeuille", label: "Portefeuille", Icon: Wallet,        href: "/portefeuille"    },
-  { id: "actions",      label: "Actions",      Icon: Zap,           href: "/tableau-de-bord" },
-  { id: "acces",        label: "Accès",        Icon: KeyRound,      href: "/tableau-de-bord" },
+  { id: "formations",   label: "Formations",   Icon: GraduationCap, href: "/tableau-de-bord?section=formations" },
+  { id: "activites",    label: "Activités",    Icon: Activity,      href: "/tableau-de-bord?section=activites"  },
+  { id: "portefeuille", label: "Portefeuille", Icon: Wallet,        href: "/portefeuille"                       },
+  { id: "actions",      label: "Actions",      Icon: Zap,           href: "/tableau-de-bord?section=actions"    },
+  { id: "acces",        label: "Accès",        Icon: KeyRound,      href: "/tableau-de-bord?section=acces"      },
 ];
 
 const SOLDE_CARDS = [

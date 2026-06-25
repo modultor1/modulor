@@ -541,6 +541,14 @@ export default function TableauDeBordPage() {
   const unreadCount = notifications.filter((n) => !n.lu).length;
   const channelRef  = useRef<ReturnType<typeof createClient> extends { channel: (...args: unknown[]) => infer R } ? R : unknown>(null);
 
+  /* ─── Section initiale depuis l'URL (?section=actions) ── */
+  useEffect(() => {
+    const s = new URLSearchParams(window.location.search).get("section");
+    if (s && ["formations", "activites", "actions", "acces"].includes(s)) {
+      setActiveSection(s);
+    }
+  }, []);
+
   /* ─── Charger l'utilisateur + données ── */
   useEffect(() => {
     const supabase = createClient();
