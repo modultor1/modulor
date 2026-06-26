@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2, ChevronRight, CheckCircle2, ShoppingCart, Loader2 } from "lucide-react";
+import { Trash2, ChevronRight, CheckCircle2, Loader2, X } from "lucide-react";
+import { motion } from "motion/react";
 import { formatCFA } from "@/lib/utils";
 import { StarRating } from "@/components/ui/StarRating";
 
@@ -25,51 +26,89 @@ interface CartItem {
 /* ─── Hero ──────────────────────────────────────────────────────────── */
 function CartHero() {
   return (
-    <section className="relative overflow-hidden" style={{ minHeight: 300 }}>
-      <Image src="/images/cart-bg-hero.png" alt="" fill className="object-cover" aria-hidden />
+    <motion.section className="relative overflow-hidden w-full" style={{ minHeight: 340 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
+      <Image src="/images/bg-hero.png" alt="" fill className="object-cover" aria-hidden priority />
       <div className="absolute inset-0 pointer-events-none">
-        <Image src="/images/formations-pattern.png" alt="" fill className="object-cover opacity-50" aria-hidden />
+        <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-40" aria-hidden />
       </div>
+
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center py-10">
-          <div className="flex flex-col gap-3">
-            <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
-              <span className="text-foreground">Panier et</span><br />
-              <span className="text-primary">Paiements</span>
-            </h1>
-            <p className="text-sm sm:text-base text-foreground max-w-xs leading-relaxed">
-              Vos différents choix de formations ont été ajoutés au panier
-            </p>
-            <div className="mt-2 animate-bounce w-fit" style={{ animationDuration: "3.5s" }}>
-              <Image src="/images/cart-bubble-green.png" alt="" width={52} height={52} />
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center py-12">
+
+          {/* Texte */}
+          <motion.div className="flex flex-col gap-4"
+            initial="hidden" animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } } }}>
+            <motion.h1 style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 700, fontSize: "clamp(36px, 7vw, 64px)" }} className="leading-tight"
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}>
+              <span style={{ color: "#03251C" }}>Panier et</span><br />
+              <span style={{ color: "#2934F2" }}>Paiements</span>
+            </motion.h1>
+            <motion.div className="flex items-start gap-3"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+              <p style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 500, fontSize: "clamp(17px, 2.4vw, 24px)", color: "#21D34C" }} className="max-w-sm leading-snug">
+                Vos différents choix de formations ont été ajouté au panier
+              </p>
+              <Image src="/images/cart-bubble-green.png" alt="" width={48} height={48} className="object-contain shrink-0 mt-1 hidden sm:block" />
+            </motion.div>
+          </motion.div>
+
+          {/* Illustration panier 3D + bulles */}
+          <div className="relative hidden md:flex justify-center items-center min-h-[320px]">
+            <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.3 }}>
+              <Image src="/images/cart-hero-3d.png" alt="Panier" width={380} height={360} className="object-contain" priority />
+            </motion.div>
+
+            {/* Bulles flottantes "!" autour du panier */}
+            <motion.div className="absolute top-0 left-[28%] pointer-events-none"
+              initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.7 }}>
+              <Image src="/images/cart-bubble-blue.png" alt="" width={52} height={52} className="object-contain" />
+            </motion.div>
+            <motion.div className="absolute top-4 right-0 pointer-events-none"
+              initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.85 }}>
+              <Image src="/images/cart-bubble-blue.png" alt="" width={72} height={72} className="object-contain" />
+            </motion.div>
+            <motion.div className="absolute top-1/2 right-[2%] pointer-events-none"
+              initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 1.0 }}>
+              <Image src="/images/cart-bubble-blue.png" alt="" width={44} height={44} className="object-contain" />
+            </motion.div>
+            <motion.div className="absolute bottom-4 left-[6%] pointer-events-none"
+              initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 1.15 }}>
+              <Image src="/images/cart-bubble-green.png" alt="" width={46} height={46} className="object-contain" />
+            </motion.div>
           </div>
-          <div className="relative hidden md:flex justify-center items-center">
-            <ShoppingCart size={120} className="text-primary/20" strokeWidth={1} />
-            <ShoppingCart size={80} className="text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" strokeWidth={1.5} />
-          </div>
+
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
 /* ─── État vide ─────────────────────────────────────────────────────── */
 function EmptyCart() {
   return (
-    <div className="flex flex-col items-center justify-center py-20 gap-5">
-      <div className="relative w-40 h-32 flex items-center justify-center">
+    <motion.div className="flex flex-col items-center justify-center py-16 gap-5"
+      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+      <div className="relative w-60 h-56 flex items-center justify-center">
         <Image src="/images/cart-empty-cloud.png" alt="" fill className="object-contain" aria-hidden />
-        <ShoppingCart size={48} className="relative z-10 text-primary/40" strokeWidth={1.5} />
+        <div className="relative z-10 w-36 h-36">
+          <Image src="/images/cart-empty-icon.png" alt="Panier vide" fill className="object-contain" />
+          <span className="absolute -top-1 right-3 w-9 h-9 rounded-full bg-red-500 flex items-center justify-center shadow-md">
+            <X size={18} className="text-white" strokeWidth={3} />
+          </span>
+        </div>
       </div>
       <p className="text-lg font-bold text-foreground">Votre panier est vide</p>
       <Link href="/formations">
-        <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity"
+        <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity cursor-pointer"
           style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
           Découvrir les formations <ChevronRight size={15} />
         </span>
       </Link>
-    </div>
+    </motion.div>
   );
 }
 
@@ -91,6 +130,8 @@ export default function PanierPage() {
     setLoading(false);
   }, []);
 
+  // Chargement du panier au montage : effet légitime (fetch déclenche setLoading).
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadCart(); }, [loadCart]);
 
   async function removeItem(formationId: string) {
@@ -142,7 +183,7 @@ export default function PanierPage() {
 
       <section className="bg-white py-8 sm:py-10 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-lg sm:text-xl font-bold text-foreground mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-primary mb-6">
             Récapitulatif des formations ajoutées au panier
           </h2>
 
