@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { ShoppingCart, ChevronRight, CheckCircle2, Star, Loader2, BookOpen } from "lucide-react";
+import { ShoppingCart, ChevronRight, CheckCircle2, Star, Loader2, BookOpen, Clock, BarChart3 } from "lucide-react";
+import { motion } from "motion/react";
 import { formatCFA } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { useCartStore } from "@/store/cartStore";
@@ -88,6 +89,7 @@ export default function FormationDetailPage() {
   const [cartLoading, setCartLoading] = useState(false);
   const [buyLoading,  setBuyLoading]  = useState(false);
   const [feedback,    setFeedback]    = useState<string | null>(null);
+  const [achatMode,   setAchatMode]   = useState<"unique" | "abo">("unique");
 
   useEffect(() => {
     async function load() {
@@ -205,27 +207,93 @@ export default function FormationDetailPage() {
   const formateurs = f.formateurs ?? FALLBACK.formateurs!;
   const avis       = f.avis       ?? FALLBACK.avis!;
 
+  /* Titre hero : 1er mot foncé, le reste en bleu (comme le design) */
+  const titleParts = f.titre.trim().split(/\s+/);
+  const titleFirst = titleParts[0];
+  const titleRest  = titleParts.slice(1).join(" ");
+  /* Sous-titre vert = 1re phrase de la description */
+  const heroTagline = (f.description?.split(". ")[0] ?? "").trim();
+  /* Teintes pâles alternées pour les cartes Programme */
+  const MODULE_TINTS = ["#FEFBEA", "#F1FBF4", "#EFF3FF"];
+
   return (
     <div className="bg-white">
-      {/* Hero image */}
-      <div className="relative w-full h-56 sm:h-72 md:h-96 overflow-hidden">
-        <Image src={f.image} alt={f.titre} fill className="object-cover" priority />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 p-6 text-white">
-          <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="px-3 py-1 rounded-full bg-primary text-white text-xs font-bold">{f.domaine}</span>
-            <span className="px-3 py-1 rounded-full bg-accent text-dark-green text-xs font-bold">{f.niveau}</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">{f.titre}</h1>
-          <div className="mt-2 flex items-center gap-3">
-            <Stars rating={f.note} size={14} />
-            <span className="text-xs text-white/80">{f.nb_avis} avis</span>
-            {f.duree && <span className="text-xs text-white/80">· {f.duree}</span>}
+      {/* Hero clair — texte gauche + image droite */}
+      <motion.section className="relative overflow-hidden w-full"
+        initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+        <Image src="/images/bg-hero.png" alt="" fill className="object-cover" aria-hidden priority />
+        <div className="absolute inset-0 pointer-events-none">
+          <Image src="/images/pattern-hero.png" alt="" fill className="object-cover opacity-40" aria-hidden />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center py-10 md:py-12">
+
+            {/* Texte */}
+            <motion.div className="flex flex-col gap-4"
+              initial="hidden" animate="visible"
+              variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } } }}>
+              <motion.span className="w-fit px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold"
+                variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}>
+                {f.domaine}
+              </motion.span>
+              <motion.h1 style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 700, fontSize: "clamp(32px, 6vw, 56px)" }} className="leading-tight"
+                variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}>
+                <span style={{ color: "#03251C" }}>{titleFirst}</span>
+                {titleRest && <> <span style={{ color: "#2934F2" }}>{titleRest}</span></>}
+              </motion.h1>
+              {heroTagline && (
+                <motion.p style={{ fontFamily: "var(--font-tt-interphases)", fontWeight: 500, fontSize: "clamp(15px, 2vw, 20px)", color: "#21D34C" }} className="max-w-md leading-snug"
+                  variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}>
+                  {heroTagline}
+                </motion.p>
+              )}
+              <motion.div className="flex items-center gap-2 text-dark-green font-bold text-sm"
+                variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}>
+                <BarChart3 size={18} className="text-accent" />
+                {f.niveau}
+              </motion.div>
+            </motion.div>
+
+            {/* Image formation + bulles */}
+            <div className="relative hidden md:block">
+              <motion.div className="relative rounded-2xl overflow-hidden shadow-lg aspect-[4/3]"
+                initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.3 }}>
+                <Image src={f.image} alt={f.titre} fill className="object-cover" priority />
+              </motion.div>
+              <motion.div className="absolute -top-4 -left-4 pointer-events-none"
+                initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.7 }}>
+                <Image src="/images/cart-bubble-blue.png" alt="" width={54} height={54} className="object-contain" />
+              </motion.div>
+              <motion.div className="absolute top-1/3 -right-3 pointer-events-none"
+                initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.85 }}>
+                <Image src="/images/cart-bubble-blue.png" alt="" width={40} height={40} className="object-contain" />
+              </motion.div>
+              <motion.div className="absolute -bottom-3 left-1/4 pointer-events-none"
+                initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 1.0 }}>
+                <Image src="/images/cart-bubble-green.png" alt="" width={46} height={46} className="object-contain" />
+              </motion.div>
+            </div>
+
           </div>
         </div>
-      </div>
+      </motion.section>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-10">
+
+        {/* Méta : titre + note + durée */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border pb-5">
+          <span className="flex items-center gap-2 text-base font-bold text-primary">
+            <BookOpen size={18} /> {f.titre}
+          </span>
+          <Stars rating={f.note} size={15} />
+          <span className="text-xs text-muted-foreground">{f.nb_avis} avis</span>
+          {f.duree && (
+            <span className="flex items-center gap-1 text-xs font-semibold text-foreground">
+              <Clock size={14} className="text-primary" /> {f.duree}
+            </span>
+          )}
+        </div>
 
         {/* Feedback message */}
         {feedback && (
@@ -261,8 +329,9 @@ export default function FormationDetailPage() {
           </h2>
           <div className="flex flex-col gap-3">
             {programme.map((mod, i) => (
-              <div key={i} className="rounded-xl border border-border p-4 hover:border-primary/40 transition-colors">
-                <p className="text-sm font-bold text-foreground">{mod.titre}</p>
+              <div key={i} className="rounded-2xl border border-border/60 p-4 hover:shadow-sm transition-shadow"
+                style={{ background: MODULE_TINTS[i % MODULE_TINTS.length] }}>
+                <p className="text-sm font-bold text-primary">{mod.titre}</p>
                 <p className="text-xs text-muted-foreground mt-1">{mod.desc}</p>
               </div>
             ))}
@@ -328,8 +397,32 @@ export default function FormationDetailPage() {
           <h2 className="text-lg font-bold text-foreground">Options d&apos;achat</h2>
           <p className="text-sm text-muted-foreground">
             Prix unitaire :{" "}
-            <span className="text-xl font-bold text-foreground">{formatCFA(f.prix)}</span>
+            <span className="text-2xl font-bold text-primary">{formatCFA(f.prix)}</span>
           </p>
+
+          {!isEnrolled && (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                <button onClick={() => setAchatMode("unique")}
+                  className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-sm font-bold transition-colors ${
+                    achatMode === "unique" ? "border-accent bg-accent/10 text-dark-green" : "border-border text-muted-foreground hover:border-primary/40"
+                  }`}>
+                  {achatMode === "unique" && <CheckCircle2 size={15} className="text-accent" />}
+                  Achat unique
+                </button>
+                <button onClick={() => setAchatMode("abo")}
+                  className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-sm font-bold transition-colors ${
+                    achatMode === "abo" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"
+                  }`}>
+                  {achatMode === "abo" && <CheckCircle2 size={15} className="text-primary" />}
+                  Abonnements
+                </button>
+              </div>
+              {achatMode === "abo" && (
+                <p className="text-xs text-muted-foreground -mt-1">Les abonnements seront bientôt disponibles — achat unique pour le moment.</p>
+              )}
+            </>
+          )}
 
           {isEnrolled ? (
             /* Déjà enrôlé */
@@ -339,7 +432,7 @@ export default function FormationDetailPage() {
                 <span className="text-sm font-bold text-dark-green">Vous êtes déjà inscrit à cette formation</span>
               </div>
               <Link href="/tableau-de-bord">
-                <span className="w-full py-3.5 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity cursor-pointer"
+                <span className="w-full py-3.5 rounded-full font-bold text-white text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity cursor-pointer"
                   style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
                   <BookOpen size={16} /> Accéder à ma formation
                 </span>
@@ -349,7 +442,7 @@ export default function FormationDetailPage() {
             <div className="flex flex-col gap-3">
               {/* S'inscrire = achat direct */}
               <button onClick={buyNow} disabled={buyLoading}
-                className="w-full py-3.5 rounded-xl font-bold text-white text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60"
+                className="w-full py-3.5 rounded-full font-bold text-white text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60"
                 style={{ background: "linear-gradient(to right, #2934f2, #57f27d)" }}>
                 {buyLoading ? <Loader2 size={16} className="animate-spin" /> : null}
                 S&apos;inscrire
@@ -357,7 +450,7 @@ export default function FormationDetailPage() {
 
               {/* Ajouter au panier */}
               <button onClick={addToCart} disabled={cartLoading || inCart}
-                className="w-full py-3.5 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity bg-primary disabled:opacity-60">
+                className="w-full py-3.5 rounded-full font-bold text-white text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity bg-primary disabled:opacity-60">
                 {cartLoading
                   ? <Loader2 size={16} className="animate-spin" />
                   : <ShoppingCart size={16} />}
@@ -366,7 +459,7 @@ export default function FormationDetailPage() {
 
               {/* Acheter maintenant */}
               <button onClick={buyNow} disabled={buyLoading}
-                className="w-full py-3.5 rounded-xl font-bold text-dark-green text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-60"
+                className="w-full py-3.5 rounded-full font-bold text-dark-green text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-60"
                 style={{ background: "#57f27d" }}>
                 Acheter maintenant <ChevronRight size={16} />
               </button>
