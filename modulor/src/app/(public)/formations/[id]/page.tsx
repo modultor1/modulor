@@ -81,7 +81,7 @@ export default function FormationDetailPage() {
   const addItemToCart = useCartStore((s) => s.addItem);
 
   const [formation,   setFormation]   = useState<Formation | null>(null);
-  const [videos,      setVideos]      = useState<any[]>([]);
+  const [videos,      setVideos]      = useState<{ titre: string; description?: string }[]>([]);
   const [loading,     setLoading]     = useState(true);
   const [isLoggedIn,  setIsLoggedIn]  = useState(false);
   const [isEnrolled,  setIsEnrolled]  = useState(false);
@@ -295,9 +295,9 @@ export default function FormationDetailPage() {
           )}
         </div>
 
-        {/* Feedback message */}
+        {/* Feedback toast — position fixe, visible partout sur la page */}
         {feedback && (
-          <div className="rounded-xl bg-accent/10 border border-accent/30 px-4 py-3 text-sm text-dark-green text-center font-semibold">
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 rounded-full bg-dark-green text-white px-6 py-3 text-sm font-semibold shadow-lg max-w-[90vw] text-center">
             {feedback}
           </div>
         )}
